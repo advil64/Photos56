@@ -4,6 +4,9 @@
 */
 package view;
 
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -12,7 +15,7 @@ import java.io.*;
 
 import app.Photos;
 
-public class Controller {
+public class Controller extends Photos {
 
 		    
 	public void start(Stage mainStage) {
@@ -20,8 +23,17 @@ public class Controller {
 	}
 	
 	@FXML
-	private void login(){
-		System.out.println("Login button clicked");
+	private void login() throws IOException {
+		FXMLLoader loader = new FXMLLoader();
+		loader.setLocation(getClass().getResource("login2.fxml"));
+		root = (AnchorPane)loader.load();
+		controller= loader.getController();
+		controller.start(Photos.window);
+		Scene scene = new Scene(root, 714.0, 440.0);
+		Photos.window.setScene(scene);
+		Photos.window.setTitle("Login Page");
+		Photos.window.setResizable(false);
+		Photos.window.show();
 	}
 
 }

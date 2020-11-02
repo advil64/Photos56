@@ -19,15 +19,21 @@ import javafx.stage.Stage;
 
 public class Photos extends Application {
 
+    public Scene scene;
+    public AnchorPane root;
+    public Controller controller;
+    public static Stage window;
+
     @Override
     public void start(Stage primaryStage) throws Exception{
         // TODO Auto-generated method stub
+        window = primaryStage;
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("/view/login.fxml"));
-        AnchorPane root = (AnchorPane)loader.load();
-        Controller controller= loader.getController();
+        root = (AnchorPane)loader.load();
+        controller= loader.getController();
         controller.start(primaryStage);
-        Scene scene = new Scene(root, 714.0, 440.0);
+        scene = new Scene(root, 714.0, 440.0);
         primaryStage.setScene(scene);
         primaryStage.setTitle("Login Page");
         primaryStage.setResizable(false);
