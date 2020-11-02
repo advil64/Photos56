@@ -24,7 +24,7 @@ public class Controller extends Photos {
 	@FXML TextField username;
 	
 	public void start(Stage mainStage) {
-		
+		//deserialize the list of users
 	}
 	
 	/**
@@ -36,6 +36,7 @@ public class Controller extends Photos {
 		//error if nothing is entered in the textfield
 		if(user.equals("")) {
 			Photos.setErrorWindow("Invalid Entry", "Please make sure you enter a valid username");
+			return;
 		}
 		//if username is admin, then set the scene to admin page
 		if(user.equals("admin")) {
@@ -50,6 +51,7 @@ public class Controller extends Photos {
 			Photos.window.setTitle("Admin Page");
 			Photos.window.setResizable(false);
 			Photos.window.show();
+			return;
 		}
 		
 		//if username is non-admin
@@ -65,6 +67,7 @@ public class Controller extends Photos {
 			Photos.window.setTitle("Non-Admin Page");
 			Photos.window.setResizable(false);
 			Photos.window.show();
+			return;
 		}
 		//if username doesn't exist
 		Photos.setErrorWindow("Invalid Entry", "Username does not exist");

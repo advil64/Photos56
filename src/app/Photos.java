@@ -4,7 +4,13 @@
 */
 package app;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -21,7 +27,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
-public class Photos extends Application {
+public class Photos extends Application implements Serializable{
 
     public Scene scene;
     public AnchorPane root;
@@ -31,8 +37,11 @@ public class Photos extends Application {
     public static Stage window;
     public static Alert errorWindow;
     
+  //public static final String storeDir= "dat";
+  	public static final String storeFile= "users.dat";
+    
     //temporary arraylist of users
-    public static ObservableList<String> obsList;        
+    public static ObservableList<String> obsList;     
 
     @Override
     public void start(Stage primaryStage) throws Exception{
@@ -54,6 +63,20 @@ public class Photos extends Application {
     public static void main(String[] args) {
     	obsList = FXCollections.observableArrayList();
         launch(args);
+    }
+    
+    public static void writeApp(ObservableList<String> obsList) throws IOException{
+    	FileOutputStream fos= new FileOutputStream(storeFile);
+		ObjectOutputStream oos= new ObjectOutputStream(fos);
+		for(int i=0; i<obsList.size(); i++) {
+			oos.writeObject(obsList.get(i));
+		}
+	}
+    public static ObservableList<String> readApp() throws IOException, ClassNotFoundException{
+    	ObjectInputStream ois = new ObjectInputStream(new FileInputStream(storeFile));
+    	ObservableList<String> gapp = FXCollections.observableArrayList();
+    	gapp.add((String)ois.readObject());
+    	return gapp;
     }
     
     /**

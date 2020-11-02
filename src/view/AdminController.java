@@ -19,7 +19,7 @@ import app.Photos;
 /**
  * This class is used to control the Admin Page
  */
-public class AdminController extends Photos {
+public class AdminController extends Photos implements Serializable{
 	
 	@FXML ListView<String> username_list;
 	@FXML TextField username_textfield;
@@ -28,6 +28,8 @@ public class AdminController extends Photos {
 		username_list.setItems(obsList);
 		username_list.getSelectionModel().select(0);
 	}
+	
+	
 	
 	/**
 	 * This method is engaged when the user clicks the logout button which sets the scene back to the login page
@@ -52,8 +54,7 @@ public class AdminController extends Photos {
 	 * Adds a user to the list
 	 */
 	@FXML
-	private void add(){
-		System.out.println("Add button clicked");
+	private void add() throws IOException{
 		String username = username_textfield.getText().trim();
 		//error if nothing is entered in the textfield
 		if(username.equals("")) {
@@ -68,6 +69,9 @@ public class AdminController extends Photos {
 		//adding username to the list
 		obsList.add(username);
 		username_list.setItems(obsList);
+		//serialize the user list
+		writeApp(obsList);
+		
 	}
 	
 	/**
@@ -76,7 +80,6 @@ public class AdminController extends Photos {
 	 */
 	@FXML
 	private void delete(){
-		System.out.println("Delete button clicked");
 		//if nothing is selected and user clicks delete
 		if(username_list.getSelectionModel().getSelectedItem() == null) {
 			Photos.setErrorWindow("Error", "Please select an item before deleting");
