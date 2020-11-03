@@ -4,6 +4,7 @@
 */
 package app;
 
+import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -64,7 +65,11 @@ public class Photos extends Application implements Serializable{
     	obsList = FXCollections.observableArrayList();
         launch(args);
     }
-    
+    /**
+     * This method is used to write to the users.dat file
+     * @param obsList - list of usernames
+     * @throws IOException
+     */
     public static void writeApp(ObservableList<String> obsList) throws IOException{
     	FileOutputStream fos= new FileOutputStream(storeFile);
 		ObjectOutputStream oos= new ObjectOutputStream(fos);
@@ -72,11 +77,39 @@ public class Photos extends Application implements Serializable{
 			oos.writeObject(obsList.get(i));
 		}
 	}
+    /**
+     * This method is used to read the users.dat file and populate the 
+     * usernames list (obsList)
+     * @return - returns the list of usernames
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
     public static ObservableList<String> readApp() throws IOException, ClassNotFoundException{
-    	ObjectInputStream ois = new ObjectInputStream(new FileInputStream(storeFile));
+    	//create the file if it doesn't exist
+    	File temp = new File("users.dat");
+    	temp.createNewFile();
+    	
     	ObservableList<String> gapp = FXCollections.observableArrayList();
-    	gapp.add((String)ois.readObject());
-    	return gapp;
+    	ObjectInputStream ois;
+    	try{
+    		ois = new ObjectInputStream(new FileInputStream(storeFile));
+    	} catch(EOFException e) {
+			return gapp;
+		}
+    	
+    	//read the .dat file and populate the obsList (list of users)
+    	while(true) {
+    		try {
+    			gapp.add((String)ois.readObject());	
+    		} catch (EOFException e) {
+    			return gapp;
+    		}
+    	}
+    }
+    @Override
+    public void stop() throws IOException{
+        //Write list of users to file
+        writeApp(obsList);
     }
     
     /**

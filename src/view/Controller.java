@@ -23,15 +23,18 @@ import app.Photos;
 public class Controller extends Photos {
 	@FXML TextField username;
 	
-	public void start(Stage mainStage) {
-		//deserialize the list of users
+	public void start(Stage mainStage) throws ClassNotFoundException, IOException {
+		
 	}
 	
 	/**
 	 * This method is activated when the login button is clicked and sets the scene to the appropriate page
+	 * @throws IOException
+	 * @throws ClassNotFoundException 
 	 */
 	@FXML
-	private void login() throws IOException {
+	private void login() throws IOException, ClassNotFoundException {
+		obsList = readApp();
 		String user = username.getText().trim();
 		//error if nothing is entered in the textfield
 		if(user.equals("")) {

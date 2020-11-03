@@ -67,9 +67,11 @@ public class NonAdminController extends Photos {
 	
 	/**
 	 * This method is engaged when the user clicks the logout button which sets the scene back to the login page
+	 * @throws IOException
+	 * @throws ClassNotFoundException 
 	 */
 	@FXML
-	private void logout() throws IOException {
+	private void logout() throws IOException, ClassNotFoundException {
 		//setting the scene back to the login page
 		FXMLLoader loader = new FXMLLoader();
 		loader.setLocation(getClass().getResource("login.fxml"));
