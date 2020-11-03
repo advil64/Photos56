@@ -29,8 +29,6 @@ public class AdminController extends Photos implements Serializable{
 		username_list.getSelectionModel().select(0);
 	}
 	
-	
-	
 	/**
 	 * This method is engaged when the user clicks the logout button which sets the scene back to the login page
 	 * @throws IOException

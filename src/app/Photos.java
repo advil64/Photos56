@@ -38,7 +38,6 @@ public class Photos extends Application implements Serializable{
     public static Stage window;
     public static Alert errorWindow;
     
-  //public static final String storeDir= "dat";
   	public static final String storeFile= "users.dat";
     
     //temporary arraylist of users
@@ -106,6 +105,9 @@ public class Photos extends Application implements Serializable{
     		}
     	}
     }
+    /**
+     * Method stores all data when GUI is closed
+     */
     @Override
     public void stop() throws IOException{
         //Write list of users to file
