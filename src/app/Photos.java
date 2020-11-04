@@ -23,6 +23,7 @@ import javafx.stage.Stage;
 import view.AdminController;
 import view.Controller;
 import view.NonAdminController;
+import view.OpenAlbumController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
@@ -35,6 +36,7 @@ public class Photos extends Application implements Serializable{
     public Controller controller;
     public AdminController adminController;
     public NonAdminController nonAdminController;
+    public OpenAlbumController openAlbumController;
     public static Stage window;
     public static Alert errorWindow;
     
