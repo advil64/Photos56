@@ -52,10 +52,10 @@ public class NonAdminController extends Photos {
 	}
 	/**
 	 * This method is engaged when the user clicks the openAlbum button which sets the scene to the openAlbum page
-	 * @throws IOException 
+	 * @throws Exception 
 	 */
 	@FXML
-	private void openAlbum() throws IOException {
+	private void openAlbum() throws Exception {
 		//setting the scene to open album page
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(getClass().getResource("openAlbum.fxml"));
