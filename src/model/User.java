@@ -63,4 +63,25 @@ public class User {
     private void addPhoto(Photo newPhoto){
         photos.add(newPhoto);
     }
+
+    @Override
+    public String toString(){
+        return this.username;
+    }
+
+    @Override
+    public boolean equals(Object o){
+        //check what the object being compared is
+        if(o instanceof String){
+            return this.username.equals((String)o);
+        } else if(o instanceof User){
+            return this.username.equals(o.toString());
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return this.username.hashCode();
+    }
 }

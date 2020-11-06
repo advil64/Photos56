@@ -18,8 +18,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
+import model.User;
 import view.AdminController;
 import view.Controller;
 import view.NonAdminController;
@@ -27,7 +27,6 @@ import view.OpenAlbumController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.Stage;
 
 public class Photos extends Application implements Serializable{
 
@@ -43,7 +42,7 @@ public class Photos extends Application implements Serializable{
   	public static final String storeFile= "users.dat";
     
     //temporary arraylist of users
-    public static ObservableList<String> obsList;     
+    public static ObservableList<User> userList;
 
     @Override
     public void start(Stage primaryStage) throws Exception{
@@ -63,19 +62,19 @@ public class Photos extends Application implements Serializable{
     }
     
     public static void main(String[] args) {
-    	obsList = FXCollections.observableArrayList();
+    	userList = FXCollections.observableArrayList();
         launch(args);
     }
     /**
      * This method is used to write to the users.dat file
-     * @param obsList - list of usernames
+     * @param myUsers - list of users
      * @throws IOException
      */
-    public static void writeApp(ObservableList<String> obsList) throws IOException{
-    	FileOutputStream fos= new FileOutputStream(storeFile);
-		ObjectOutputStream oos= new ObjectOutputStream(fos);
-		for(int i=0; i<obsList.size(); i++) {
-			oos.writeObject(obsList.get(i));
+    public static void writeApp(ObservableList<User> myUsers) throws IOException{
+    	FileOutputStream fos = new FileOutputStream(storeFile);
+		ObjectOutputStream oos = new ObjectOutputStream(fos);
+		for(User x : myUsers) {
+			oos.writeObject(x.toString());
 		}
 	}
     /**
@@ -85,12 +84,12 @@ public class Photos extends Application implements Serializable{
      * @throws IOException
      * @throws ClassNotFoundException
      */
-    public static ObservableList<String> readApp() throws IOException, ClassNotFoundException{
+    public static ObservableList<User> readApp() throws IOException, ClassNotFoundException{
     	//create the file if it doesn't exist
     	File temp = new File("users.dat");
     	temp.createNewFile();
     	
-    	ObservableList<String> gapp = FXCollections.observableArrayList();
+    	ObservableList<User> gapp = FXCollections.observableArrayList();
     	ObjectInputStream ois;
     	try{
     		ois = new ObjectInputStream(new FileInputStream(storeFile));
@@ -101,7 +100,7 @@ public class Photos extends Application implements Serializable{
     	//read the .dat file and populate the obsList (list of users)
     	while(true) {
     		try {
-    			gapp.add((String)ois.readObject());	
+    			gapp.add(new User((String)ois.readObject()));
     		} catch (EOFException e) {
     			return gapp;
     		}
@@ -113,7 +112,7 @@ public class Photos extends Application implements Serializable{
     @Override
     public void stop() throws IOException{
         //Write list of users to file
-        writeApp(obsList);
+        writeApp(userList);
     }
     
     /**

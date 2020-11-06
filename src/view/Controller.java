@@ -1,7 +1,3 @@
-/**
- * @author Advith Chegu
- * @author Banty Patel
-*/
 package view;
 
 import javafx.fxml.FXMLLoader;
@@ -10,20 +6,20 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import app.Photos;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import java.io.*;
+import model.User;
 
-import app.Photos;
+import java.io.*;
 
 /**
  * This class is used to Control the login page
+ * @author Advith Chegu
+ * @author Banty Patel
  */
 public class Controller extends Photos {
 	@FXML TextField username;
 	
-	public void start(Stage mainStage) throws ClassNotFoundException, IOException {
+	public void start(Stage mainStage){
 		
 	}
 	
@@ -34,46 +30,40 @@ public class Controller extends Photos {
 	 */
 	@FXML
 	private void login() throws IOException, ClassNotFoundException {
-		obsList = readApp();
-		String user = username.getText().trim();
-		//error if nothing is entered in the textfield
-		if(user.equals("")) {
+		userList = readApp();
+		String loginName = username.getText().trim();
+		int e = 0;
+
+		//check if username is valid and is in the user list
+		if(loginName.equals("")) {
 			Photos.setErrorWindow("Invalid Entry", "Please make sure you enter a valid username");
 			return;
+		} else if(loginName.equals("admin")) {
+			setStage("Admin Page", "admin.fxml", null);
+		} else if((e = userList.indexOf(new User(loginName))) > -1) {
+			setStage("Non-Admin Page", "nonadmin.fxml", userList.get(e));
+		} else{
+			Photos.setErrorWindow("Invalid Entry", "Username does not exist");
 		}
-		//if username is admin, then set the scene to admin page
-		if(user.equals("admin")) {
-			//set the scene to the admin page
-			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(getClass().getResource("admin.fxml"));
-			root = (AnchorPane)loader.load();
-			adminController= loader.getController();
-			adminController.start(Photos.window);
-			Scene scene = new Scene(root, 714.0, 440.0);
-			Photos.window.setScene(scene);
-			Photos.window.setTitle("Admin Page");
-			Photos.window.setResizable(false);
-			Photos.window.show();
-			return;
-		}
-		
-		//if username is non-admin
-		if(obsList.contains(user)) {
-			//set the scene to the non-admin page
-			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(getClass().getResource("nonadmin.fxml"));
-			root = (AnchorPane)loader.load();
-			nonAdminController= loader.getController();
-			nonAdminController.start(Photos.window);
-			Scene scene = new Scene(root, 714.0, 440.0);
-			Photos.window.setScene(scene);
-			Photos.window.setTitle("Non-Admin Page");
-			Photos.window.setResizable(false);
-			Photos.window.show();
-			return;
-		}
-		//if username doesn't exist
-		Photos.setErrorWindow("Invalid Entry", "Username does not exist");
-		
+	}
+
+	/**
+	 * set the scene to the non-admin page
+	 * @param title
+	 * @param resource
+	 * @throws IOException
+	 */
+	private void setStage(String title, String resource, User myUser) throws IOException {
+		FXMLLoader loader = new FXMLLoader();
+		loader.setLocation(getClass().getResource(resource));
+		root = (AnchorPane)loader.load();
+		nonAdminController= loader.getController();
+		//pass the user to the new class
+		nonAdminController.start(Photos.window);
+		Scene scene = new Scene(root, 714.0, 440.0);
+		Photos.window.setScene(scene);
+		Photos.window.setTitle(title);
+		Photos.window.setResizable(false);
+		Photos.window.show();
 	}
 }

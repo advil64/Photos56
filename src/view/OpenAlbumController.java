@@ -34,7 +34,7 @@ public class OpenAlbumController extends Photos{
 	Image image4 = new Image("file:sample4.jpg");
 	
 	Image[] ImageList = {image1,image2,image3,image4};
-	 ObservableList<String> items = FXCollections.observableArrayList("Caption1", "Caption2", "Caption3", "Caption4");
+	ObservableList<String> items = FXCollections.observableArrayList("Caption1", "Caption2", "Caption3", "Caption4");
 	
 	@FXML ListView<String> photolist;
 	@FXML ImageView image;

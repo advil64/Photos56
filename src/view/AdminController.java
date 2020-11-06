@@ -10,22 +10,21 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import java.io.*;
-
 import app.Photos;
+import model.User;
+
 /**
  * This class is used to control the Admin Page
  */
 public class AdminController extends Photos implements Serializable{
 	
-	@FXML ListView<String> username_list;
+	@FXML ListView<User> username_list;
 	@FXML TextField username_textfield;
 	
 	public void start(Stage mainStage) throws IOException, ClassNotFoundException {
-		username_list.setItems(obsList);
+		username_list.setItems(userList);
 		username_list.getSelectionModel().select(0);
 	}
 	
@@ -57,22 +56,24 @@ public class AdminController extends Photos implements Serializable{
 	@FXML
 	private void add() throws IOException{
 		String username = username_textfield.getText().trim();
-		//error if nothing is entered in the textfield
+
+		//error if nothing is entered in the text field
 		if(username.equals("")) {
 			Photos.setErrorWindow("Invalid Entry", "Please make sure you enter a valid username");
 			return;
 		}
+
 		//no duplicate users??
-		if(obsList.contains(username)) {
+		if(userList.contains(username)) {
 			Photos.setErrorWindow("Invalid Entry", "Username already exists");
 			return;
 		}
-		//adding username to the list
-		obsList.add(username);
-		username_list.setItems(obsList);
-		//serialize the user list
-		writeApp(obsList);
-		
+
+		//create a new user and set the list
+		userList.add(new User(username));
+		username_list.setItems(userList);
+
+		//TODO serialize the user list
 	}
 	
 	/**
@@ -88,9 +89,9 @@ public class AdminController extends Photos implements Serializable{
 			return;
 		}
 		//removing item from list
-		String username = username_list.getSelectionModel().getSelectedItem();
-		obsList.remove(username);
-		username_list.setItems(obsList);
-		writeApp(obsList);
+		User myUser = username_list.getSelectionModel().getSelectedItem();
+		userList.remove(myUser.toString());
+		username_list.setItems(userList);
+		writeApp(userList);
 	}
 }

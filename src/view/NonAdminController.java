@@ -6,12 +6,9 @@ package view;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import java.io.*;
 
@@ -21,6 +18,9 @@ import app.Photos;
  * This class is used to control the non-admin login page
  */
 public class NonAdminController extends Photos {
+
+	@FXML TextField album_textfield;
+
 	
 	public void start(Stage mainStage) {
 		
@@ -32,7 +32,14 @@ public class NonAdminController extends Photos {
 	 */
 	@FXML
 	private void create() {
-		
+
+		//get the name of the album first and run checks
+		String albumName = album_textfield.getText().trim();
+
+		if(albumName.equals("")) {
+			Photos.setErrorWindow("Invalid Album Name", "Please make sure you enter a valid album name");
+			return;
+		}
 	}
 	/**
 	 * This method is engaged when the user clicks the rename button
