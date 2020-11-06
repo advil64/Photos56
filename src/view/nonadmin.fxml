@@ -12,7 +12,7 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="440.0" prefWidth="714.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.NonAdminController">
    <children>
-      <ListView layoutX="3.0" layoutY="3.0" prefHeight="434.0" prefWidth="226.0" />
+      <ListView fx:id="albumlist" layoutX="3.0" layoutY="3.0" prefHeight="434.0" prefWidth="226.0" />
       <Label layoutX="255.0" layoutY="79.0" text="Album Name:">
          <font>
             <Font size="20.0" />

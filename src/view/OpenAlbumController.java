@@ -82,9 +82,10 @@ public class OpenAlbumController extends Photos{
 	 * This method is triggered when the back button is clicked
 	 * Sets the scene to the previous page
 	 * @throws IOException 
+	 * @throws ClassNotFoundException 
 	 */
 	@FXML
-	private void back() throws IOException {
+	private void back() throws IOException, ClassNotFoundException {
 		FXMLLoader loader = new FXMLLoader();
 		loader.setLocation(getClass().getResource("nonadmin.fxml"));
 		root = (AnchorPane)loader.load();

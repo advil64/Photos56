@@ -62,18 +62,20 @@ public class AdminController extends Photos implements Serializable{
 			Photos.setErrorWindow("Invalid Entry", "Please make sure you enter a valid username");
 			return;
 		}
-
-		//no duplicate users??
+		//trying to add admin to user list
+		if(username.trim().equals("admin")) {
+			Photos.setErrorWindow("Invalid Entry", "Please make sure you enter a valid username");
+			return;
+		}
+		//no duplicate users
 		if(userList.contains(username)) {
 			Photos.setErrorWindow("Invalid Entry", "Username already exists");
 			return;
 		}
-
 		//create a new user and set the list
 		userList.add(new User(username));
 		username_list.setItems(userList);
-
-		//TODO serialize the user list
+		writeApp(userList);
 	}
 	
 	/**
@@ -90,7 +92,7 @@ public class AdminController extends Photos implements Serializable{
 		}
 		//removing item from list
 		User myUser = username_list.getSelectionModel().getSelectedItem();
-		userList.remove(myUser.toString());
+		userList.remove(myUser);
 		username_list.setItems(userList);
 		writeApp(userList);
 	}

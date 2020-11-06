@@ -18,12 +18,14 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import model.User;
 import view.AdminController;
 import view.Controller;
 import view.NonAdminController;
 import view.OpenAlbumController;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
@@ -42,9 +44,10 @@ public class Photos extends Application implements Serializable{
   	public static final String storeFile= "users.dat";
     
     //temporary arraylist of users
-    public static ObservableList<User> userList;
+    public static ObservableList<User> userList = FXCollections.observableArrayList();
+    public static ObservableList<String> random = FXCollections.observableArrayList();
 
-    @Override
+	@Override
     public void start(Stage primaryStage) throws Exception{
         window = primaryStage;
         FXMLLoader loader = new FXMLLoader();

@@ -2,6 +2,9 @@ package model;
 
 import java.util.ArrayList;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 /**
  * Defines a photos app user
  * @author Advith Chegu
@@ -10,9 +13,9 @@ import java.util.ArrayList;
 public class User {
 
     //user variables
-    private String username;
-    private ArrayList albums;
-    private ArrayList photos;
+    public String username;
+    public ObservableList<Album> albums;
+    public ObservableList<Photo> photos;
 
     /**
      * Creates a new user object
@@ -20,15 +23,15 @@ public class User {
      */
     public User(String username){
         this.username = username;
-        albums = new ArrayList<Album>();
-        photos = new ArrayList<Photo>();
+        albums = FXCollections.observableArrayList();
+        photos = FXCollections.observableArrayList();
     }
 
     /**
      * Returns corresponding username
      * @return username of the user
      */
-    private String getUsername() {
+    public String getUsername() {
         return username;
     }
 
@@ -36,7 +39,7 @@ public class User {
      * Returns an ArrayList of the user's albums
      * @return user's albums
      */
-    private ArrayList getAlbums() {
+    public ObservableList<Album> getAlbums() {
         return albums;
     }
 
@@ -44,15 +47,19 @@ public class User {
      * Returns an ArrayList of the user's photos
      * @return user's photos
      */
-    private ArrayList getPhotos() {
+    public ObservableList<Photo> getPhotos() {
         return photos;
+    }
+    
+    public void setAlbums(ObservableList<Album> albums) {
+    	this.albums = albums;
     }
 
     /**
      * Add a new album to the arraylist
      * @param newAlbum the new album to be added
      */
-    private void addAlbum(Album newAlbum){
+    public void addAlbum(Album newAlbum){
         albums.add(newAlbum);
     }
 
@@ -60,7 +67,7 @@ public class User {
      * Add a new photo to the arraylist
      * @param newPhoto the new photo to be added
      */
-    private void addPhoto(Photo newPhoto){
+    public void addPhoto(Photo newPhoto){
         photos.add(newPhoto);
     }
 

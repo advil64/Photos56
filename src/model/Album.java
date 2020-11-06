@@ -3,6 +3,9 @@ package model;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 /**
  * Defines an album
  * @author Advith Chegu
@@ -11,10 +14,10 @@ import java.util.Collections;
 public class Album {
 
     //album variables
-    private String albumName;
-    private int numPhotos;
-    private String dateRange;
-    private ArrayList<Photo> albumPhotos;
+    public String albumName;
+    public int numPhotos;
+    public String dateRange;
+    public ObservableList<Photo> albumPhotos;
 
     /**
      * Creates a new Album object
@@ -22,7 +25,7 @@ public class Album {
      */
     public Album(String albumName){
         this.albumName = albumName;
-        this.albumPhotos = new ArrayList<Photo>();
+        this.albumPhotos = FXCollections.observableArrayList();
         this.numPhotos = 0;
     }
 
@@ -30,7 +33,7 @@ public class Album {
      * Add a new photo to the album and sets the date range
      * @param newPhoto photo to be added to the album
      */
-    private void addPhoto(Photo newPhoto){
+    public void addPhoto(Photo newPhoto){
         albumPhotos.add(newPhoto);
         numPhotos++;
 
@@ -47,5 +50,9 @@ public class Album {
 
     public void setAlbumName(String albumName) {
         this.albumName = albumName;
+    }
+    
+    public String toString() {
+    	return "Album name: " + this.albumName+"\n"+"Num. of Photos: " + numPhotos + "\n" + "Date Range: " + dateRange;
     }
 }

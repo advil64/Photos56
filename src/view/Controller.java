@@ -17,8 +17,8 @@ import java.io.*;
  * @author Banty Patel
  */
 public class Controller extends Photos {
+	//@FXML TextField username;
 	@FXML TextField username;
-	
 	public void start(Stage mainStage){
 		
 	}
@@ -32,6 +32,7 @@ public class Controller extends Photos {
 	private void login() throws IOException, ClassNotFoundException {
 		userList = readApp();
 		String loginName = username.getText().trim();
+		random.add(loginName);
 		int e = 0;
 
 		//check if username is valid and is in the user list
@@ -52,14 +53,21 @@ public class Controller extends Photos {
 	 * @param title
 	 * @param resource
 	 * @throws IOException
+	 * @throws ClassNotFoundException 
 	 */
-	private void setStage(String title, String resource, User myUser) throws IOException {
+	private void setStage(String title, String resource, User myUser) throws IOException, ClassNotFoundException {
 		FXMLLoader loader = new FXMLLoader();
 		loader.setLocation(getClass().getResource(resource));
 		root = (AnchorPane)loader.load();
-		nonAdminController= loader.getController();
-		//pass the user to the new class
-		nonAdminController.start(Photos.window);
+		if(title.equals("Admin Page")) {
+			adminController = loader.getController();
+			adminController.start(Photos.window);
+		}
+		else {
+			nonAdminController= loader.getController();
+			//pass the user to the new class
+			nonAdminController.start(Photos.window);
+		}
 		Scene scene = new Scene(root, 714.0, 440.0);
 		Photos.window.setScene(scene);
 		Photos.window.setTitle(title);
