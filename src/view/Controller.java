@@ -30,6 +30,7 @@ public class Controller extends Photos {
 	 */
 	@FXML
 	private void login() throws IOException, ClassNotFoundException {
+		random.clear();
 		userList = readApp();
 		String loginName = username.getText().trim();
 		random.add(loginName);

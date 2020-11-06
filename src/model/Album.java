@@ -1,6 +1,5 @@
 package model;
 
-import java.util.ArrayList;
 import java.util.Collections;
 
 import javafx.collections.FXCollections;
@@ -14,6 +13,7 @@ import javafx.collections.ObservableList;
 public class Album {
 
     //album variables
+	public String info = "";
     public String albumName;
     public int numPhotos;
     public String dateRange;
@@ -23,8 +23,10 @@ public class Album {
      * Creates a new Album object
      * @param albumName name of the new album
      */
-    public Album(String albumName){
+    public Album(String albumName,int numPhotos, String dateRange){
         this.albumName = albumName;
+        this.numPhotos = numPhotos;
+        this.dateRange = dateRange;
         this.albumPhotos = FXCollections.observableArrayList();
         this.numPhotos = 0;
     }

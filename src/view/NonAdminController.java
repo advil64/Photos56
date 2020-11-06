@@ -30,12 +30,11 @@ public class NonAdminController extends Photos implements Serializable{
 
 	
 	public void start(Stage mainStage) throws ClassNotFoundException, IOException {
-		for(int i=0; i<userList.size(); i++) {
-			if(userList.get(i).getUsername().equals(random.get(0))) {
-				userList.get(i).setAlbums(readApp2());
-				albumlist.setItems(userList.get(i).getAlbums());
-			}
-		}
+		//display the albumlist for user who signed in
+		User temp = new User(random.get(0));
+		userList.get(userList.indexOf(temp)).setAlbums(readApp2());
+		albumlist.setItems(userList.get(userList.indexOf(temp)).getAlbums());
+		albumlist.getSelectionModel().select(0);
 	}
 	
 	public static void writeApp2(ObservableList<Album> myUsers) throws IOException{
@@ -59,10 +58,20 @@ public class NonAdminController extends Photos implements Serializable{
 			return gapp;
 		}
     	
-    	//read the .dat file and populate the obsList (list of users)
+    	//read the .dat file and populate the observable list (list of albums)
     	while(true) {
     		try {
-    			gapp.add(new Album((String)ois.readObject()));
+    			String temp1 = (String)ois.readObject();
+    			//find substrings of album, num, and date range
+    			int delimeter1 = temp1.indexOf("\n");
+    			//album name
+    			String album = temp1.substring(12,delimeter1);
+    			int delimeter2 = temp1.lastIndexOf("\n");
+    			//number of photos
+    			int pnum = Integer.valueOf(temp1.substring(delimeter1+17,delimeter2));
+    			//date range
+    			String dateRange = temp1.substring(delimeter2+13);
+    			gapp.add(new Album(album,pnum,dateRange));
     		} catch (EOFException e) {
     			return gapp;
     		}
@@ -87,7 +96,7 @@ public class NonAdminController extends Photos implements Serializable{
 		}
 		
 		//create the album and add it to the list for that specific user
-		Album album = new Album(albumName);
+		Album album = new Album(albumName, 0, null);
 		for(int i=0; i<userList.size(); i++) {
 			//check to see if album already exists
 			for(int j=0; j<userList.get(i).albums.size(); j++) {
@@ -109,18 +118,63 @@ public class NonAdminController extends Photos implements Serializable{
 	/**
 	 * This method is engaged when the user clicks the rename button
 	 * Renames an album to the list
+	 * @throws IOException 
 	 */
 	@FXML
-	private void rename() {
+	private void rename() throws IOException {
+		//get the name of the album first and run checks
+		String albumName = album_textfield.getText().trim();
+
+		if(albumName.equals("")) {
+			Photos.setErrorWindow("Invalid Album Name", "Please make sure you enter a valid album name");
+			return;
+		}
+		//get the index selected
+		Album selectedIndex = albumlist.getSelectionModel().getSelectedItem();
 		
+		//find the user in the userlist and change it's album name
+		for(User i: userList) {
+			//finding the user
+			if(i.getUsername().equals(random.get(0))) {
+				//set it's album name to albumName
+				for(Album j: i.getAlbums()) {
+					if(j.getAlbumName().equals(selectedIndex.getAlbumName())) {
+						j.setAlbumName(albumName);
+						albumlist.setItems(i.getAlbums());
+						writeApp2(i.getAlbums());
+						break;
+					}
+				}
+			}
+		}
 	}
 	/**
 	 * This method is engaged when the user clicks the delete button
 	 * Deletes an album to the list
+	 * @throws IOException 
 	 */
 	@FXML
-	private void delete() {
-		
+	private void delete() throws IOException {
+		int index = albumlist.getSelectionModel().getSelectedIndex();
+		//if nothing is select
+		if(index == -1) {
+			Photos.setErrorWindow("Cannot Delete", "Please make sure you select and item from the list");
+			return;
+		}
+		Album temp = albumlist.getSelectionModel().getSelectedItem();
+		//remove album from User's album list
+		for(User i: userList) {
+			if(i.getUsername().equals(random.get(0))) {
+				for(Album j: i.getAlbums()) {
+					if(j.getAlbumName().equals(temp.getAlbumName())) {
+						i.getAlbums().remove(temp);
+						albumlist.setItems(i.getAlbums());
+						writeApp2(i.getAlbums());
+						break;
+					}
+				}
+			}
+		}
 	}
 	/**
 	 * This method is engaged when the user clicks the openAlbum button which sets the scene to the openAlbum page
