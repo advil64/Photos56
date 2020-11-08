@@ -38,7 +38,7 @@ public class NonAdminController extends Photos implements Serializable{
 	}
 	
 	public static void writeApp2(ObservableList<Album> myUsers) throws IOException{
-    	FileOutputStream fos = new FileOutputStream(random.get(0)+ "-" + "albums.dat");
+    	FileOutputStream fos = new FileOutputStream("data/" + random.get(0)+ "-" + "albums.dat");
 		ObjectOutputStream oos = new ObjectOutputStream(fos);
 		for(Album x : myUsers) {
 			oos.writeObject(x.toString());
@@ -47,13 +47,13 @@ public class NonAdminController extends Photos implements Serializable{
 	
 	public static ObservableList<Album> readApp2() throws IOException, ClassNotFoundException{
     	//create the file if it doesn't exist
-    	File temp = new File(random.get(0)+ "-" + "albums.dat");
+    	File temp = new File("data/" + random.get(0)+ "-" + "albums.dat");
     	temp.createNewFile();
     	
     	ObservableList<Album> gapp = FXCollections.observableArrayList();
     	ObjectInputStream ois;
     	try{
-    		ois = new ObjectInputStream(new FileInputStream(random.get(0)+ "-" + "albums.dat"));
+    		ois = new ObjectInputStream(new FileInputStream("data/" + random.get(0)+ "-" + "albums.dat"));
     	} catch(EOFException e) {
 			return gapp;
 		}
