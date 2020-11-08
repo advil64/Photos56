@@ -100,7 +100,7 @@ public class NonAdminController extends Photos implements Serializable{
 		for(int i=0; i<userList.size(); i++) {
 			//check to see if album already exists
 			for(int j=0; j<userList.get(i).albums.size(); j++) {
-				if(userList.get(i).getAlbums().contains(album)) {
+				if(userList.get(i).getAlbums().get(j).getAlbumName().equals(albumName)) {
 					Photos.setErrorWindow("Invalid Album Name", "Album already exists");
 					return;
 				}
@@ -110,6 +110,8 @@ public class NonAdminController extends Photos implements Serializable{
 				userList.get(i).addAlbum(album);
 				albumlist.setItems(userList.get(i).getAlbums());
 				writeApp2(userList.get(i).getAlbums());
+				int size = userList.get(i).getAlbums().size();
+				albumlist.getSelectionModel().select(size-1);
 				break;
 			}
 		}
@@ -131,16 +133,30 @@ public class NonAdminController extends Photos implements Serializable{
 		}
 		//get the index selected
 		Album selectedIndex = albumlist.getSelectionModel().getSelectedItem();
+		int selected = albumlist.getSelectionModel().getSelectedIndex();
 		
 		//find the user in the userlist and change it's album name
 		for(User i: userList) {
 			//finding the user
 			if(i.getUsername().equals(random.get(0))) {
+				//check to see if renamed album already exists
+				for(Album j: i.getAlbums()) {
+					if(j.getAlbumName().equals(albumName)) {
+						Photos.setErrorWindow("Invalid Album Name", "Album name already exists");
+						return;
+					}
+				}
 				//set it's album name to albumName
 				for(Album j: i.getAlbums()) {
 					if(j.getAlbumName().equals(selectedIndex.getAlbumName())) {
-						j.setAlbumName(albumName);
+						ObservableList<Album> temp = i.getAlbums();
+						Album temp2 = i.getAlbums().get(i.getAlbums().indexOf(j));
+						temp2.setAlbumName(albumName);
+						i.getAlbums().remove(i.getAlbums().indexOf(j));
+						i.getAlbums().add(temp2);
+						int size = i.getAlbums().size();
 						albumlist.setItems(i.getAlbums());
+						albumlist.getSelectionModel().select(size-1);
 						writeApp2(i.getAlbums());
 						break;
 					}
