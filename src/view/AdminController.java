@@ -12,6 +12,8 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.fxml.FXML;
 import java.io.*;
+import java.nio.file.Files;
+
 import app.Photos;
 import model.User;
 
@@ -56,7 +58,6 @@ public class AdminController extends Photos implements Serializable{
 	@FXML
 	private void add() throws IOException{
 		String username = username_textfield.getText().trim();
-
 		//error if nothing is entered in the text field
 		if(username.equals("")) {
 			Photos.setErrorWindow("Invalid Entry", "Please make sure you enter a valid username");
@@ -68,14 +69,20 @@ public class AdminController extends Photos implements Serializable{
 			return;
 		}
 		//no duplicate users
-		if(userList.contains(username)) {
-			Photos.setErrorWindow("Invalid Entry", "Username already exists");
-			return;
+		for(int i=0; i<userList.size(); i++) {
+			if(userList.get(i).getUsername().equals(username)) {
+				Photos.setErrorWindow("Invalid Entry", "Username already exists");
+				return;
+			}
 		}
+		
 		//create a new user and set the list
 		userList.add(new User(username));
 		username_list.setItems(userList);
 		writeApp(userList);
+		//create a user folder
+		new File("data/" + username).mkdir();
+		
 	}
 	
 	/**
@@ -86,14 +93,38 @@ public class AdminController extends Photos implements Serializable{
 	@FXML
 	private void delete() throws IOException{
 		//if nothing is selected and user clicks delete
-		if(username_list.getSelectionModel().getSelectedItem() == null) {
+		if(username_list.getSelectionModel().getSelectedItem() == null || username_list.getSelectionModel().getSelectedIndex() == -1) {
 			Photos.setErrorWindow("Error", "Please select an item before deleting");
 			return;
 		}
+		String username = username_list.getSelectionModel().getSelectedItem().getUsername();
 		//removing item from list
 		User myUser = username_list.getSelectionModel().getSelectedItem();
 		userList.remove(myUser);
 		username_list.setItems(userList);
 		writeApp(userList);
+		//delete the directory
+		File file = new File("data/" + username);
+		if(file.isDirectory() && file != null) {
+			deleteDir(file);
+		}
+	}
+	
+	/**
+	 * Method to delete user's files
+	 * @param file
+	 * @return
+	 */
+	public static boolean deleteDir(File file) {
+		if(file.isDirectory()) {
+			File[] files = file.listFiles();
+			for(int i=0; i<files.length; i++) {
+				boolean boo = deleteDir(files[i]);
+				if(boo == false) {
+					return false;
+				}
+			}
+		}
+		return file.delete();
 	}
 }

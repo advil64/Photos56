@@ -11,7 +11,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import model.Album;
-import model.Photo;
 import model.User;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -27,6 +26,9 @@ public class NonAdminController extends Photos implements Serializable{
 
 	@FXML TextField album_textfield;
 	@FXML ListView<Album> albumlist;
+	
+	//Album that is opened
+	Album openedAlbum;
 
 	
 	public void start(Stage mainStage) throws ClassNotFoundException, IOException {
@@ -38,7 +40,7 @@ public class NonAdminController extends Photos implements Serializable{
 	}
 	
 	public static void writeApp2(ObservableList<Album> myUsers) throws IOException{
-    	FileOutputStream fos = new FileOutputStream("data/" + random.get(0)+ "-" + "albums.dat");
+    	FileOutputStream fos = new FileOutputStream("data/" + random.get(0) + "/" + "albums.dat");
 		ObjectOutputStream oos = new ObjectOutputStream(fos);
 		for(Album x : myUsers) {
 			oos.writeObject(x.toString());
@@ -47,13 +49,13 @@ public class NonAdminController extends Photos implements Serializable{
 	
 	public static ObservableList<Album> readApp2() throws IOException, ClassNotFoundException{
     	//create the file if it doesn't exist
-    	File temp = new File("data/" + random.get(0)+ "-" + "albums.dat");
+    	File temp = new File("data/" + random.get(0) + "/" + "albums.dat");
     	temp.createNewFile();
     	
     	ObservableList<Album> gapp = FXCollections.observableArrayList();
-    	ObjectInputStream ois;
+    	ObjectInputStream ois = null;
     	try{
-    		ois = new ObjectInputStream(new FileInputStream("data/" + random.get(0)+ "-" + "albums.dat"));
+    		ois = new ObjectInputStream(new FileInputStream("data/" + random.get(0)+ "/" + "albums.dat"));
     	} catch(EOFException e) {
 			return gapp;
 		}
@@ -115,6 +117,8 @@ public class NonAdminController extends Photos implements Serializable{
 				break;
 			}
 		}
+		//create a directory for the album
+		new File("data/" + random.get(0) + "/" + albumName).mkdir();
 		
 	}
 	/**
@@ -133,7 +137,7 @@ public class NonAdminController extends Photos implements Serializable{
 		}
 		//get the index selected
 		Album selectedIndex = albumlist.getSelectionModel().getSelectedItem();
-		int selected = albumlist.getSelectionModel().getSelectedIndex();
+		String str = selectedIndex.getAlbumName();
 		
 		//find the user in the userlist and change it's album name
 		for(User i: userList) {
@@ -149,7 +153,6 @@ public class NonAdminController extends Photos implements Serializable{
 				//set it's album name to albumName
 				for(Album j: i.getAlbums()) {
 					if(j.getAlbumName().equals(selectedIndex.getAlbumName())) {
-						ObservableList<Album> temp = i.getAlbums();
 						Album temp2 = i.getAlbums().get(i.getAlbums().indexOf(j));
 						temp2.setAlbumName(albumName);
 						i.getAlbums().remove(i.getAlbums().indexOf(j));
@@ -163,7 +166,13 @@ public class NonAdminController extends Photos implements Serializable{
 				}
 			}
 		}
+		//rename the album's directory
+		String original = "data/" + random.get(0) + "/" + str;
+		File newName = new File("data/" + random.get(0) + "/" + albumName);
+		File file = new File(original);
+		file.renameTo(newName);
 	}
+	
 	/**
 	 * This method is engaged when the user clicks the delete button
 	 * Deletes an album to the list
@@ -174,7 +183,7 @@ public class NonAdminController extends Photos implements Serializable{
 		int index = albumlist.getSelectionModel().getSelectedIndex();
 		//if nothing is select
 		if(index == -1) {
-			Photos.setErrorWindow("Cannot Delete", "Please make sure you select and item from the list");
+			Photos.setErrorWindow("Cannot Delete", "Please make sure you select an item from the list");
 			return;
 		}
 		Album temp = albumlist.getSelectionModel().getSelectedItem();
@@ -191,13 +200,43 @@ public class NonAdminController extends Photos implements Serializable{
 				}
 			}
 		}
+		//delete the directory
+		File file = new File("data/" + random.get(0) + "/" + temp.getAlbumName());
+		if(file.isDirectory() && file != null) {
+			deleteDir(file);
+		}
+	}	
+	
+	/**
+	 * Method used to delete an album's directory
+	 * @param file
+	 * @return
+	 */
+	public static boolean deleteDir(File file) {
+		if(file.isDirectory()) {
+			File[] files = file.listFiles();
+			for(int i=0; i<files.length; i++) {
+				boolean boo = deleteDir(files[i]);
+				if(boo == false) {
+					return false;
+				}
+			}
+		}
+		return file.delete();
 	}
+	
 	/**
 	 * This method is engaged when the user clicks the openAlbum button which sets the scene to the openAlbum page
 	 * @throws Exception 
 	 */
 	@FXML
 	private void openAlbum() throws Exception {
+		//make sure an album is selected
+		if(albumlist.getSelectionModel().getSelectedIndex() == -1) {
+			Photos.setErrorWindow("Cannot Open Album", "Please make sure you select an album");
+			return;
+		}
+		openedAlbum = albumlist.getSelectionModel().getSelectedItem();
 		//setting the scene to open album page
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(getClass().getResource("openAlbum.fxml"));

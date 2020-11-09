@@ -12,20 +12,21 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
 
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import model.Album;
+import model.Photo;
 import model.User;
 import view.AdminController;
 import view.Controller;
 import view.NonAdminController;
 import view.OpenAlbumController;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
@@ -94,7 +95,7 @@ public class Photos extends Application implements Serializable{
     	temp.createNewFile();
     	
     	ObservableList<User> gapp = FXCollections.observableArrayList();
-    	ObjectInputStream ois;
+    	ObjectInputStream ois = null;
     	try{
     		ois = new ObjectInputStream(new FileInputStream(storeFile));
     	} catch(EOFException e) {

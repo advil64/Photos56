@@ -14,7 +14,7 @@ public class Photo implements Comparable<Photo>{
     //photo variables
     private String caption;
     private Date dateTime;
-    private ArrayList tags;
+    private ArrayList<String> tags;
     private String photoPath;
 
     /**
@@ -50,7 +50,7 @@ public class Photo implements Comparable<Photo>{
         return dateTime;
     }
 
-    public ArrayList getTags() {
+    public ArrayList<String> getTags() {
         return tags;
     }
 

@@ -7,6 +7,8 @@ package view;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
@@ -14,9 +16,13 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import java.io.*;
 import java.net.URL;
@@ -26,7 +32,7 @@ import app.Photos;
 /**
  * This class is used to control the OpenAlbum page
  */
-public class OpenAlbumController extends Photos{
+public class OpenAlbumController extends NonAdminController{
 	
 	Image image1 = new Image("file:sample1.jpg");
 	Image image2 = new Image("file:sample2.jpg");
@@ -168,15 +174,17 @@ public class OpenAlbumController extends Photos{
 	 */
 	@FXML
 	private void add_photo() {
+		FileChooser fileChooser = new FileChooser();
+		fileChooser.setTitle("File Chooser");
+		Window mainStage = null;
 		
+		File file = fileChooser.showOpenDialog(mainStage);
+		if (file != null) {
+	        //path of the file selected is stored
+	        String photoPath =(file.getPath());
+	        System.out.println(photoPath);
+	    } else  {
+	        return;
+	    }
 	}
-	
-	
-
-	
-
-	
-	
-	
-	
 }

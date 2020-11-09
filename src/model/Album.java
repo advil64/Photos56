@@ -13,7 +13,6 @@ import javafx.collections.ObservableList;
 public class Album {
 
     //album variables
-	public String info = "";
     public String albumName;
     public int numPhotos;
     public String dateRange;
