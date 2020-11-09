@@ -2,7 +2,7 @@
  * @author Advith Chegu
  * @author Banty Patel
 */
-package view;
+package controller;
 
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
@@ -93,7 +93,7 @@ public class OpenAlbumController extends NonAdminController{
 	@FXML
 	private void back() throws IOException, ClassNotFoundException {
 		FXMLLoader loader = new FXMLLoader();
-		loader.setLocation(getClass().getResource("nonadmin.fxml"));
+		loader.setLocation(getClass().getResource("../view/nonadmin.fxml"));
 		root = (AnchorPane)loader.load();
 		nonAdminController= loader.getController();
 		nonAdminController.start(Photos.window);

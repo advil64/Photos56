@@ -2,7 +2,7 @@
  * @author Advith Chegu
  * @author Banty Patel
 */
-package view;
+package controller;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -39,7 +39,7 @@ public class AdminController extends Photos implements Serializable{
 	private void logout() throws IOException, ClassNotFoundException {
 		//setting the scene back to the login page
 		FXMLLoader loader = new FXMLLoader();
-		loader.setLocation(getClass().getResource("login.fxml"));
+		loader.setLocation(getClass().getResource("../view/login.fxml"));
 		root = (AnchorPane)loader.load();
 		controller= loader.getController();
 		controller.start(Photos.window);

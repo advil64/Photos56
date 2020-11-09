@@ -12,7 +12,7 @@
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="440.0" prefWidth="714.0" 
 	xmlns="http://javafx.com/javafx/11.0.1" 
 	xmlns:fx="http://javafx.com/fxml/1"
-	fx:controller="view.Controller">
+	fx:controller="controller.Controller">
    <children>
       <Label layoutX="135.0" layoutY="181.0" prefHeight="38.0" prefWidth="136.0" text="Username:">
          <font>

@@ -1,4 +1,4 @@
-package view;
+package controller;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -41,9 +41,9 @@ public class Controller extends Photos {
 			Photos.setErrorWindow("Invalid Entry", "Please make sure you enter a valid username");
 			return;
 		} else if(loginName.equals("admin")) {
-			setStage("Admin Page", "admin.fxml", null);
+			setStage("Admin Page", "../view/admin.fxml", null);
 		} else if((e = userList.indexOf(new User(loginName))) > -1) {
-			setStage("Non-Admin Page", "nonadmin.fxml", userList.get(e));
+			setStage("Non-Admin Page", "../view/nonadmin.fxml", userList.get(e));
 		} else{
 			Photos.setErrorWindow("Invalid Entry", "Username does not exist");
 		}

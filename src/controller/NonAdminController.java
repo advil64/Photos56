@@ -2,7 +2,7 @@
  * @author Advith Chegu
  * @author Banty Patel
 */
-package view;
+package controller;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -239,7 +239,7 @@ public class NonAdminController extends Photos implements Serializable{
 		openedAlbum = albumlist.getSelectionModel().getSelectedItem();
 		//setting the scene to open album page
 			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(getClass().getResource("openAlbum.fxml"));
+			loader.setLocation(getClass().getResource("../view/openAlbum.fxml"));
 			root = (AnchorPane)loader.load();
 			openAlbumController= loader.getController();
 			openAlbumController.start(Photos.window);
@@ -266,7 +266,7 @@ public class NonAdminController extends Photos implements Serializable{
 	private void logout() throws IOException, ClassNotFoundException {
 		//setting the scene back to the login page
 		FXMLLoader loader = new FXMLLoader();
-		loader.setLocation(getClass().getResource("login.fxml"));
+		loader.setLocation(getClass().getResource("../view/login.fxml"));
 		root = (AnchorPane)loader.load();
 		controller= loader.getController();
 		controller.start(Photos.window);

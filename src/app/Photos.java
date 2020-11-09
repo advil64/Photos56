@@ -14,6 +14,10 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import controller.AdminController;
+import controller.Controller;
+import controller.NonAdminController;
+import controller.OpenAlbumController;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -23,10 +27,6 @@ import javafx.stage.Stage;
 import model.Album;
 import model.Photo;
 import model.User;
-import view.AdminController;
-import view.Controller;
-import view.NonAdminController;
-import view.OpenAlbumController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
@@ -53,7 +53,7 @@ public class Photos extends Application implements Serializable{
     public void start(Stage primaryStage) throws Exception{
         window = primaryStage;
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("/view/login.fxml"));
+        loader.setLocation(getClass().getResource("../view/login.fxml"));
         root = (AnchorPane)loader.load();
         controller= loader.getController();
         controller.start(primaryStage);
