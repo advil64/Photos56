@@ -40,7 +40,7 @@ public class NonAdminController extends Photos implements Serializable{
 	}
 	
 	public static void writeApp2(ObservableList<Album> myUsers) throws IOException{
-    	FileOutputStream fos = new FileOutputStream("data/" + random.get(0) + "/" + "albums.dat");
+    	FileOutputStream fos = new FileOutputStream("../data/" + random.get(0) + "/" + "albums.dat");
 		ObjectOutputStream oos = new ObjectOutputStream(fos);
 		for(Album x : myUsers) {
 			oos.writeObject(x.toString());
@@ -49,13 +49,13 @@ public class NonAdminController extends Photos implements Serializable{
 	
 	public static ObservableList<Album> readApp2() throws IOException, ClassNotFoundException{
     	//create the file if it doesn't exist
-    	File temp = new File("data/" + random.get(0) + "/" + "albums.dat");
+    	File temp = new File("../data/" + random.get(0) + "/" + "albums.dat");
     	temp.createNewFile();
     	
     	ObservableList<Album> gapp = FXCollections.observableArrayList();
     	ObjectInputStream ois = null;
     	try{
-    		ois = new ObjectInputStream(new FileInputStream("data/" + random.get(0)+ "/" + "albums.dat"));
+    		ois = new ObjectInputStream(new FileInputStream("../data/" + random.get(0)+ "/" + "albums.dat"));
     	} catch(EOFException e) {
 			return gapp;
 		}
@@ -118,7 +118,7 @@ public class NonAdminController extends Photos implements Serializable{
 			}
 		}
 		//create a directory for the album
-		new File("data/" + random.get(0) + "/" + albumName).mkdir();
+		new File("../data/" + random.get(0) + "/" + albumName).mkdir();
 		
 	}
 	/**
@@ -167,8 +167,8 @@ public class NonAdminController extends Photos implements Serializable{
 			}
 		}
 		//rename the album's directory
-		String original = "data/" + random.get(0) + "/" + str;
-		File newName = new File("data/" + random.get(0) + "/" + albumName);
+		String original = "../data/" + random.get(0) + "/" + str;
+		File newName = new File("../data/" + random.get(0) + "/" + albumName);
 		File file = new File(original);
 		file.renameTo(newName);
 	}
@@ -201,7 +201,7 @@ public class NonAdminController extends Photos implements Serializable{
 			}
 		}
 		//delete the directory
-		File file = new File("data/" + random.get(0) + "/" + temp.getAlbumName());
+		File file = new File("../data/" + random.get(0) + "/" + temp.getAlbumName());
 		if(file.isDirectory() && file != null) {
 			deleteDir(file);
 		}

@@ -42,7 +42,7 @@ public class Photos extends Application implements Serializable{
     public static Stage window;
     public static Alert errorWindow;
     
-  	public static final String storeFile= "data/users.dat";
+  	public static final String storeFile= "../data/users.dat";
     
     //temporary arraylist of users
     public static ObservableList<User> userList = FXCollections.observableArrayList();
@@ -51,6 +51,11 @@ public class Photos extends Application implements Serializable{
 
 	@Override
     public void start(Stage primaryStage) throws Exception{
+		//create data directory if it doesn't exist
+		File dir = new File("../data");
+		if(!dir.exists()) {
+			dir.mkdir();
+		}
         window = primaryStage;
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("../view/login.fxml"));
@@ -91,7 +96,7 @@ public class Photos extends Application implements Serializable{
      */
     public static ObservableList<User> readApp() throws IOException, ClassNotFoundException{
     	//create the file if it doesn't exist
-    	File temp = new File("data/users.dat");
+    	File temp = new File("../data/users.dat");
     	temp.createNewFile();
     	
     	ObservableList<User> gapp = FXCollections.observableArrayList();
