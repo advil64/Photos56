@@ -9,6 +9,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import model.Photo;
@@ -22,13 +23,14 @@ import java.util.ArrayList;
  * @author Advith Chegu
  * @author Banty Patel
  */
-public class OpenAlbumController extends Photos{
+public class OpenAlbumController extends NonAdminController{
 
 	@FXML ListView<Photo> photoList;
 	@FXML ImageView image;
 	@FXML ListView<String> tagsList;
 	@FXML TextField tagsTextField;
 	@FXML TextField captionTextField;
+	@FXML Text datetimeLabel;
 	
 	public void start(Stage mainStage){
 		//populating the listview of captions and photos
@@ -62,6 +64,7 @@ public class OpenAlbumController extends Photos{
 	private void displayImage(){
 		Photo curr = photoList.getSelectionModel().getSelectedItem();
 		image.setImage(curr.getPhoto());
+		datetimeLabel.setText(curr.getDateTime().toString());
 	}
 	
 	/**
@@ -77,7 +80,16 @@ public class OpenAlbumController extends Photos{
 	 */
 	@FXML
 	private void captionRecaption() {
-		
+		Photo curr = photoList.getSelectionModel().getSelectedItem();
+		String cap = captionTextField.getText().trim();
+
+		//error if nothing is entered in the text field
+		if(cap.equals("")) {
+			Photos.setErrorWindow("Invalid Entry", "Please make sure you enter a valid caption");
+			return;
+		}
+		curr.setCaption(cap);
+		setPhotos();
 	}
 	
 	/**
@@ -124,7 +136,7 @@ public class OpenAlbumController extends Photos{
 	 * Sets the photos list
 	 */
 	private void setPhotos(){
-		photoList.setItems(currUser.getPhotos());
+		photoList.setItems(openedAlbum.getPhotos());
 		photoList.setCellFactory(param -> new ListCell<Photo>() {
 			private ImageView imageView = new ImageView();
 			@Override
@@ -159,7 +171,9 @@ public class OpenAlbumController extends Photos{
 		if (file != null) {
 	        //path of the file selected is stored
 	        String photoPath = (file.getPath());
-	        currUser.addPhoto(new Photo("", new ArrayList<>(), photoPath));
+	        Photo newPhoto = new Photo("", new ArrayList<>(), photoPath);
+	        openedAlbum.addPhoto(newPhoto);
+	        currUser.addPhoto(newPhoto);
 	        setPhotos();
 	    }
 	}

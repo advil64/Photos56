@@ -45,6 +45,14 @@ public class Album {
         dateRange = dateRange + albumPhotos.get(albumPhotos.size()-1).getDateTime().toString();
     }
 
+    /**
+     * Returns an ArrayList of the user's photos
+     * @return album's photos
+     */
+    public ObservableList<Photo> getPhotos() {
+        return this.albumPhotos;
+    }
+
     public String getAlbumName() {
         return albumName;
     }

@@ -28,7 +28,7 @@ public class NonAdminController extends Photos implements Serializable{
 	@FXML ListView<Album> albumlist;
 	
 	//Album that is opened
-	Album openedAlbum;
+	public static Album openedAlbum;
 
 	
 	public void start(Stage mainStage) throws ClassNotFoundException, IOException {
