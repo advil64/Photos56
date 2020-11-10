@@ -52,7 +52,8 @@ public class Album {
     public void setAlbumName(String albumName) {
         this.albumName = albumName;
     }
-    
+
+    @Override
     public String toString() {
     	return "Album name: " + this.albumName+"\n"+"Num. of Photos: " + numPhotos + "\n" + "Date Range: " + dateRange;
     }

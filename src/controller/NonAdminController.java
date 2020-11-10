@@ -32,15 +32,14 @@ public class NonAdminController extends Photos implements Serializable{
 
 	
 	public void start(Stage mainStage) throws ClassNotFoundException, IOException {
-		//display the albumlist for user who signed in
-		User temp = new User(random.get(0));
-		userList.get(userList.indexOf(temp)).setAlbums(readApp2());
-		albumlist.setItems(userList.get(userList.indexOf(temp)).getAlbums());
+		//display the album list for user who signed in
+		userList.get(userList.indexOf(currUser)).setAlbums(readApp2());
+		albumlist.setItems(userList.get(userList.indexOf(currUser)).getAlbums());
 		albumlist.getSelectionModel().select(0);
 	}
 	
 	public static void writeApp2(ObservableList<Album> myUsers) throws IOException{
-    	FileOutputStream fos = new FileOutputStream("../data/" + random.get(0) + "/" + "albums.dat");
+    	FileOutputStream fos = new FileOutputStream("../data/" + currUser.getUsername() + "/" + "albums.dat");
 		ObjectOutputStream oos = new ObjectOutputStream(fos);
 		for(Album x : myUsers) {
 			oos.writeObject(x.toString());
@@ -49,13 +48,13 @@ public class NonAdminController extends Photos implements Serializable{
 	
 	public static ObservableList<Album> readApp2() throws IOException, ClassNotFoundException{
     	//create the file if it doesn't exist
-    	File temp = new File("../data/" + random.get(0) + "/" + "albums.dat");
+    	File temp = new File("../data/" + currUser.getUsername() + "/" + "albums.dat");
     	temp.createNewFile();
     	
     	ObservableList<Album> gapp = FXCollections.observableArrayList();
-    	ObjectInputStream ois = null;
+    	ObjectInputStream ois;
     	try{
-    		ois = new ObjectInputStream(new FileInputStream("../data/" + random.get(0)+ "/" + "albums.dat"));
+    		ois = new ObjectInputStream(new FileInputStream("../data/" + currUser.getUsername() + "/" + "albums.dat"));
     	} catch(EOFException e) {
 			return gapp;
 		}
@@ -88,7 +87,7 @@ public class NonAdminController extends Photos implements Serializable{
 	 * @throws ClassNotFoundException 
 	 */
 	@FXML
-	private void create() throws IOException, ClassNotFoundException {
+	private void create() throws IOException {
 		//get the name of the album first and run checks
 		String albumName = album_textfield.getText().trim();
 
@@ -108,7 +107,7 @@ public class NonAdminController extends Photos implements Serializable{
 				}
 			}
 			//add album to albums arraylist in User Object and update the ListView
-			if(userList.get(i).getUsername().equals(random.get(0))) {
+			if(userList.get(i).getUsername().equals(currUser.getUsername())) {
 				userList.get(i).addAlbum(album);
 				albumlist.setItems(userList.get(i).getAlbums());
 				writeApp2(userList.get(i).getAlbums());
@@ -118,7 +117,7 @@ public class NonAdminController extends Photos implements Serializable{
 			}
 		}
 		//create a directory for the album
-		new File("../data/" + random.get(0) + "/" + albumName).mkdir();
+		new File("../data/" + currUser.getUsername() + "/" + albumName).mkdir();
 		
 	}
 	/**
@@ -142,7 +141,7 @@ public class NonAdminController extends Photos implements Serializable{
 		//find the user in the userlist and change it's album name
 		for(User i: userList) {
 			//finding the user
-			if(i.getUsername().equals(random.get(0))) {
+			if(i.getUsername().equals(currUser.getUsername())) {
 				//check to see if renamed album already exists
 				for(Album j: i.getAlbums()) {
 					if(j.getAlbumName().equals(albumName)) {
@@ -167,8 +166,8 @@ public class NonAdminController extends Photos implements Serializable{
 			}
 		}
 		//rename the album's directory
-		String original = "../data/" + random.get(0) + "/" + str;
-		File newName = new File("../data/" + random.get(0) + "/" + albumName);
+		String original = "../data/" + currUser.getUsername() + "/" + str;
+		File newName = new File("../data/" + currUser.getUsername() + "/" + albumName);
 		File file = new File(original);
 		file.renameTo(newName);
 	}
@@ -189,7 +188,7 @@ public class NonAdminController extends Photos implements Serializable{
 		Album temp = albumlist.getSelectionModel().getSelectedItem();
 		//remove album from User's album list
 		for(User i: userList) {
-			if(i.getUsername().equals(random.get(0))) {
+			if(i.getUsername().equals(currUser.getUsername())) {
 				for(Album j: i.getAlbums()) {
 					if(j.getAlbumName().equals(temp.getAlbumName())) {
 						i.getAlbums().remove(temp);
@@ -201,7 +200,7 @@ public class NonAdminController extends Photos implements Serializable{
 			}
 		}
 		//delete the directory
-		File file = new File("../data/" + random.get(0) + "/" + temp.getAlbumName());
+		File file = new File("../data/" + currUser.getUsername() + "/" + temp.getAlbumName());
 		if(file.isDirectory() && file != null) {
 			deleteDir(file);
 		}
@@ -215,9 +214,9 @@ public class NonAdminController extends Photos implements Serializable{
 	public static boolean deleteDir(File file) {
 		if(file.isDirectory()) {
 			File[] files = file.listFiles();
-			for(int i=0; i<files.length; i++) {
-				boolean boo = deleteDir(files[i]);
-				if(boo == false) {
+			for (File value : files) {
+				boolean boo = deleteDir(value);
+				if (boo == false) {
 					return false;
 				}
 			}

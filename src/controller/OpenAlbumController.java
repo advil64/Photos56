@@ -1,87 +1,38 @@
-/**
- * @author Advith Chegu
- * @author Banty Patel
-*/
 package controller;
 
+import app.Photos;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javafx.stage.Window;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.fxml.FXML;
-import java.io.*;
-import java.net.URL;
-import java.util.ResourceBundle;
+import model.Photo;
 
-import app.Photos;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+
 /**
  * This class is used to control the OpenAlbum page
+ * @author Advith Chegu
+ * @author Banty Patel
  */
-public class OpenAlbumController extends NonAdminController{
-	
-	Image image1 = new Image("file:sample1.jpg");
-	Image image2 = new Image("file:sample2.jpg");
-	Image image3 = new Image("file:sample3.jpg");
-	Image image4 = new Image("file:sample4.jpg");
-	
-	Image[] ImageList = {image1,image2,image3,image4};
-	ObservableList<String> items = FXCollections.observableArrayList("Caption1", "Caption2", "Caption3", "Caption4");
-	
-	@FXML ListView<String> photolist;
+public class OpenAlbumController extends Photos{
+
+	@FXML ListView<Photo> photoList;
 	@FXML ImageView image;
-	@FXML ListView<String> tagslist;
-	@FXML TextField tags_textfield;
-	@FXML TextField caption_textfield;
+	@FXML ListView<String> tagsList;
+	@FXML TextField tagsTextField;
+	@FXML TextField captionTextField;
 	
 	public void start(Stage mainStage){
 		//populating the listview of captions and photos
-        photolist.setItems(items);
-        photolist.setCellFactory(param -> new ListCell<String>() {
-            private ImageView imageView = new ImageView();
-            @Override
-            public void updateItem(String name, boolean empty) {
-                super.updateItem(name, empty);
-                if (empty) {
-                    setText(null);
-                    setGraphic(null);
-                } else {
-                    if(name.equals("Caption1")) {
-                        imageView.setImage(ImageList[0]);
-                    	imageView.setFitHeight(50);
-                    	imageView.setFitWidth(50);
-                    }else if(name.equals("Caption2")) {
-                        imageView.setImage(ImageList[1]);
-                        imageView.setFitHeight(50);
-                        imageView.setFitWidth(50);
-                    }else if(name.equals("Caption3")) {
-                        imageView.setImage(ImageList[2]);
-                        imageView.setFitHeight(50);
-                        imageView.setFitWidth(50);
-                    }else if(name.equals("Caption4")) {
-                        imageView.setImage(ImageList[3]);
-                        imageView.setFitHeight(50);
-                		imageView.setFitWidth(50);
-                    }
-                    setText(name);
-                    setGraphic(imageView);
-                }
-            }
-        });
+		setPhotos();
 	}
 	
 	/**
@@ -109,8 +60,8 @@ public class OpenAlbumController extends NonAdminController{
 	 */
 	@FXML
 	private void displayImage(){
-		int index = photolist.getSelectionModel().getSelectedIndex();
-		image.setImage(ImageList[index]);
+		Photo curr = photoList.getSelectionModel().getSelectedItem();
+		image.setImage(curr.getPhoto());
 	}
 	
 	/**
@@ -168,23 +119,48 @@ public class OpenAlbumController extends NonAdminController{
 	private void copy_photo() {
 		
 	}
+
+	/**
+	 * Sets the photos list
+	 */
+	private void setPhotos(){
+		photoList.setItems(currUser.getPhotos());
+		photoList.setCellFactory(param -> new ListCell<Photo>() {
+			private ImageView imageView = new ImageView();
+			@Override
+			protected void updateItem(Photo item, boolean empty) {
+				super.updateItem(item, empty);
+				if (empty) {
+					setText(null);
+					setGraphic(null);
+				} else {
+					imageView.setImage(item.getPhoto());
+					imageView.setFitHeight(50);
+					imageView.setFitWidth(50);
+					setText(item.toString());
+					setGraphic(imageView);
+				}
+			}
+		});
+	}
 	
 	/**
 	 * This method is triggered when the add photo button is clicked
 	 */
 	@FXML
 	private void add_photo() {
+
+		//open dialog for choosing a new photo
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("File Chooser");
-		Window mainStage = null;
-		
-		File file = fileChooser.showOpenDialog(mainStage);
+		File file = fileChooser.showOpenDialog(null);
+
+		//add the new photo to the current user's images
 		if (file != null) {
 	        //path of the file selected is stored
-	        String photoPath =(file.getPath());
-	        System.out.println(photoPath);
-	    } else  {
-	        return;
+	        String photoPath = (file.getPath());
+	        currUser.addPhoto(new Photo("", new ArrayList<>(), photoPath));
+	        setPhotos();
 	    }
 	}
 }

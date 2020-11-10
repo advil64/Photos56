@@ -30,10 +30,8 @@ public class Controller extends Photos {
 	 */
 	@FXML
 	private void login() throws IOException, ClassNotFoundException {
-		random.clear();
 		userList = readApp();
 		String loginName = username.getText().trim();
-		random.add(loginName);
 		int e = 0;
 
 		//check if username is valid and is in the user list
@@ -43,6 +41,7 @@ public class Controller extends Photos {
 		} else if(loginName.equals("admin")) {
 			setStage("Admin Page", "../view/admin.fxml", null);
 		} else if((e = userList.indexOf(new User(loginName))) > -1) {
+			Photos.currUser = new User(loginName);
 			setStage("Non-Admin Page", "../view/nonadmin.fxml", userList.get(e));
 		} else{
 			Photos.setErrorWindow("Invalid Entry", "Username does not exist");

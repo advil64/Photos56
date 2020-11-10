@@ -15,7 +15,7 @@
 	xmlns:fx="http://javafx.com/fxml/1" 
 	fx:controller="controller.OpenAlbumController">
    <children>
-      <ListView fx:id="photolist" layoutX="4.0" layoutY="4.0" onMouseClicked="#displayImage" prefHeight="347.0" prefWidth="264.0" />
+      <ListView fx:id="photoList" layoutX="4.0" layoutY="4.0" onMouseClicked="#displayImage" prefHeight="347.0" prefWidth="264.0" />
       <Button fx:id="slideShowbttn" layoutX="4.0" layoutY="357.0" mnemonicParsing="false" onMouseClicked="#slideshow" prefHeight="34.0" prefWidth="264.0" text="View SlideShow" />
       <Button fx:id="backbttn" layoutX="4.0" layoutY="395.0" mnemonicParsing="false" onMouseClicked="#back" prefHeight="34.0" prefWidth="264.0" text="Go Back" />
       <ImageView fx:id="image" fitHeight="180.0" fitWidth="216.0" layoutX="274.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" />

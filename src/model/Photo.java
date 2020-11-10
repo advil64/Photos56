@@ -1,5 +1,6 @@
 package model;
 
+import javafx.scene.image.Image;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
@@ -16,6 +17,7 @@ public class Photo implements Comparable<Photo>{
     private Date dateTime;
     private ArrayList<String> tags;
     private String photoPath;
+    private Image image;
 
     /**
      * Creates a new photo object
@@ -27,6 +29,7 @@ public class Photo implements Comparable<Photo>{
         this.caption = caption;
         this.tags = tags;
         this.photoPath = photoPath;
+        this.image = new Image("file:" + photoPath);
 
         //get last modified date time
         File photoFile = new File(photoPath);
@@ -56,6 +59,20 @@ public class Photo implements Comparable<Photo>{
 
     public String getPhotoPath() {
         return photoPath;
+    }
+    
+    public Image getPhoto(){
+        return this.image;
+    }
+
+    @Override
+    public String toString(){
+        return "Caption: " + this.caption;
+    }
+
+    @Override
+    public int hashCode() {
+        return this.caption.hashCode();
     }
 
     @Override
