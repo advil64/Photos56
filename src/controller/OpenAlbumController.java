@@ -68,7 +68,7 @@ public class OpenAlbumController extends Photos{
 	 * This method is triggered when the user clicks on the view slideshow button
 	 */
 	@FXML
-	private void slideshow() {
+	private void slideShow() {
 		
 	}
 	
@@ -76,7 +76,7 @@ public class OpenAlbumController extends Photos{
 	 * This method is triggered when the caption/recaption button is clicked
 	 */
 	@FXML
-	private void caption_recaption() {
+	private void captionRecaption() {
 		
 	}
 	
@@ -84,7 +84,7 @@ public class OpenAlbumController extends Photos{
 	 * This method is triggered when the add tag button is clicked
 	 */
 	@FXML
-	private void add_tag() {
+	private void addTag() {
 		
 	}
 	
@@ -92,7 +92,7 @@ public class OpenAlbumController extends Photos{
 	 * This method is triggered when the delete tag button is clicked
 	 */
 	@FXML
-	private void delete_tag() {
+	private void deleteTag() {
 		
 	}
 	
@@ -100,7 +100,7 @@ public class OpenAlbumController extends Photos{
 	 * This method is triggered when the remove photo button is clicked
 	 */
 	@FXML
-	private void remove_photo() {
+	private void removePhoto() {
 		
 	}
 	
@@ -108,7 +108,7 @@ public class OpenAlbumController extends Photos{
 	 * This method is triggered when the move photo button is clicked
 	 */
 	@FXML
-	private void move_photo() {
+	private void movePhoto() {
 		
 	}
 	
@@ -116,7 +116,7 @@ public class OpenAlbumController extends Photos{
 	 * This method is triggered when the copy photo button is clicked
 	 */
 	@FXML
-	private void copy_photo() {
+	private void copyPhoto() {
 		
 	}
 
@@ -148,7 +148,7 @@ public class OpenAlbumController extends Photos{
 	 * This method is triggered when the add photo button is clicked
 	 */
 	@FXML
-	private void add_photo() {
+	private void addPhoto() {
 
 		//open dialog for choosing a new photo
 		FileChooser fileChooser = new FileChooser();
