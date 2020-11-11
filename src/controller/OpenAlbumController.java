@@ -6,6 +6,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
@@ -63,6 +64,10 @@ public class OpenAlbumController extends NonAdminController implements Serializa
 	 * The label to display the dateTime of an image
 	 */
 	@FXML Text datetimeLabel;
+	/**
+	 * The combo box to specify tag type
+	 */
+	@FXML ComboBox<String> tagType;
 	
 	/**
 	 * This method is triggered at the start of the openAlbum page
@@ -70,6 +75,8 @@ public class OpenAlbumController extends NonAdminController implements Serializa
 	 * @throws ClassNotFoundException 
 	 */
 	public void start(Stage mainStage) throws ClassNotFoundException, IOException{
+		//setting the combobox
+		tagType.getItems().setAll("Location", "Person");
 		//populating the listview of captions and photos
 		try {
 			openedAlbum.setPhotos(readApp3());
@@ -175,7 +182,17 @@ public class OpenAlbumController extends NonAdminController implements Serializa
 	 */
 	@FXML
 	private void removePhoto() throws IOException {
-		
+		int index = photoList.getSelectionModel().getSelectedIndex();
+		if(index == -1) {
+			Photos.setErrorWindow("Error", "Please select a photo before removing");
+			return;
+		}
+		openedAlbum.getPhotos().remove(photoList.getSelectionModel().getSelectedItem());
+		writeApp3(openedAlbum.getPhotos());
+		Photo temp = photoList.getSelectionModel().getSelectedItem();
+		if(temp != null) {
+			captionTextField.setText(temp.getCaption());
+		}
 	}
 	
 	/**

@@ -37,7 +37,6 @@ public class NonAdminController extends Photos implements Serializable{
 		//display the album list for user who signed in
 		userList.get(userList.indexOf(currUser)).setAlbums(readApp2());
 		albumlist.setItems(userList.get(userList.indexOf(currUser)).getAlbums());
-		albumlist.getSelectionModel().select(0);
 	}
 	
 	public static void writeApp2(ObservableList<Album> myUsers) throws IOException{
