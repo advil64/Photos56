@@ -65,9 +65,13 @@ public class Photo implements Comparable<Photo>{
         return this.image;
     }
 
-    @Override
-    public String toString(){
+    public String toString2(){
         return "Caption: " + this.caption;
+    }
+    
+    @Override
+    public String toString() {
+    	return this.caption + "|" + this.tags + "|" + this.photoPath;
     }
 
     @Override

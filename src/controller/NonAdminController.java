@@ -27,7 +27,9 @@ public class NonAdminController extends Photos implements Serializable{
 	@FXML TextField album_textfield;
 	@FXML ListView<Album> albumlist;
 	
-	//Album that is opened
+	/**
+	 * Album that is opened is stored
+	 */
 	public static Album openedAlbum;
 
 	
@@ -242,7 +244,7 @@ public class NonAdminController extends Photos implements Serializable{
 			root = (AnchorPane)loader.load();
 			openAlbumController= loader.getController();
 			openAlbumController.start(Photos.window);
-			Scene scene = new Scene(root, 714.0, 440.0);
+			scene = new Scene(root, 714.0, 440.0);
 			Photos.window.setScene(scene);
 			Photos.window.setTitle("Open Album");
 			Photos.window.setResizable(false);
