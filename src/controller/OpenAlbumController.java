@@ -149,7 +149,7 @@ public class OpenAlbumController extends NonAdminController implements Serializa
 			return;
 		}
 		curr.setCaption(cap);
-		writeApp3(currUser.getPhotos());
+		writeApp3(openedAlbum.getPhotos());
 		setPhotos();
 	}
 	
