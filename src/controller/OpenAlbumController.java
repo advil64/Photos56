@@ -67,7 +67,11 @@ public class OpenAlbumController extends NonAdminController implements Serializa
 	/**
 	 * The combo box to specify tag type
 	 */
-	@FXML ComboBox<String> tagType;
+	@FXML ComboBox<String> tagTypeBox;
+	/**
+	 * The text field for user inputted tag type
+	 */
+	@FXML TextField tagTypeText;
 	
 	/**
 	 * This method is triggered at the start of the openAlbum page
@@ -75,8 +79,8 @@ public class OpenAlbumController extends NonAdminController implements Serializa
 	 * @throws ClassNotFoundException 
 	 */
 	public void start(Stage mainStage) throws ClassNotFoundException, IOException{
-		//setting the combobox
-		tagType.getItems().setAll("Location", "Person");
+		//setting the combobox default values
+		tagTypeBox.getItems().setAll("Location", "Person");
 		//populating the listview of captions and photos
 		try {
 			openedAlbum.setPhotos(readApp3());

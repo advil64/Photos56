@@ -18,6 +18,7 @@ import controller.AdminController;
 import controller.Controller;
 import controller.NonAdminController;
 import controller.OpenAlbumController;
+import controller.SearchPhotosController;
 import controller.SlideShowController;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -41,6 +42,7 @@ public class Photos extends Application implements Serializable{
     public NonAdminController nonAdminController;
     public OpenAlbumController openAlbumController;
     public SlideShowController slideShowController;
+    public SearchPhotosController searchPhotosController;
     public static Stage window;
     public static Alert errorWindow;
     

@@ -250,11 +250,21 @@ public class NonAdminController extends Photos implements Serializable{
 			Photos.window.show();
 	}
 	/**
-	 * This method is engaged when the user clicks the openAlbum button which sets the scene to the searchPhotos page
+	 * This method is engaged when the user clicks the search photos button which sets the scene to the searchPhotos page
+	 * @throws IOException 
 	 */
 	@FXML
-	private void searchPhotos() {
-		
+	private void searchPhotos() throws IOException {
+		FXMLLoader loader = new FXMLLoader();
+		loader.setLocation(getClass().getResource("../view/searchPhotos.fxml"));
+		root = (AnchorPane)loader.load();
+		searchPhotosController= loader.getController();
+		searchPhotosController.start(Photos.window);
+		scene = new Scene(root, 714.0, 440.0);
+		Photos.window.setScene(scene);
+		Photos.window.setTitle("Searching Photos");
+		Photos.window.setResizable(false);
+		Photos.window.show();
 	}
 	
 	/**
