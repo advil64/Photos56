@@ -23,12 +23,11 @@ public class Album implements Serializable{
      * Creates a new Album object
      * @param albumName name of the new album
      */
-    public Album(String albumName,int numPhotos, String dateRange){
+    public Album(String albumName, int numPhotos, String dateRange){
         this.albumName = albumName;
         this.numPhotos = numPhotos;
         this.dateRange = dateRange;
         this.albumPhotos = FXCollections.observableArrayList();
-        this.numPhotos = 0;
     }
 
     /**
