@@ -36,42 +36,15 @@ public class Controller extends Photos {
 
 		//check if username is valid and is in the user list
 		if(loginName.equals("")) {
-			Photos.setErrorWindow("Invalid Entry", "Please make sure you enter a valid username");
+			setErrorWindow("Invalid Entry", "Please make sure you enter a valid username");
 			return;
 		} else if(loginName.equals("admin")) {
-			setStage("Admin Page", "../view/admin.fxml", null);
+			setStage("Admin Page", "../view/admin.fxml");
 		} else if((e = userList.indexOf(new User(loginName))) > -1) {
 			Photos.currUser = new User(loginName);
-			setStage("Non-Admin Page", "../view/nonadmin.fxml", userList.get(e));
+			setStage("Non-Admin Page", "../view/nonadmin.fxml");
 		} else{
-			Photos.setErrorWindow("Invalid Entry", "Username does not exist");
+			setErrorWindow("Invalid Entry", "Username does not exist");
 		}
-	}
-
-	/**
-	 * set the scene to the non-admin page
-	 * @param title
-	 * @param resource
-	 * @throws IOException
-	 * @throws ClassNotFoundException 
-	 */
-	private void setStage(String title, String resource, User myUser) throws IOException, ClassNotFoundException {
-		FXMLLoader loader = new FXMLLoader();
-		loader.setLocation(getClass().getResource(resource));
-		root = (AnchorPane)loader.load();
-		if(title.equals("Admin Page")) {
-			adminController = loader.getController();
-			adminController.start(Photos.window);
-		}
-		else {
-			nonAdminController= loader.getController();
-			//pass the user to the new class
-			nonAdminController.start(Photos.window);
-		}
-		Scene scene = new Scene(root, 714.0, 440.0);
-		Photos.window.setScene(scene);
-		Photos.window.setTitle(title);
-		Photos.window.setResizable(false);
-		Photos.window.show();
 	}
 }

@@ -57,16 +57,7 @@ public class SearchPhotosController extends Photos{
 	 */
 	@FXML
 	private void back() throws IOException, ClassNotFoundException {
-		FXMLLoader loader = new FXMLLoader();
-		loader.setLocation(getClass().getResource("../view/nonadmin.fxml"));
-		root = (AnchorPane)loader.load();
-		nonAdminController= loader.getController();
-		nonAdminController.start(Photos.window);
-		Scene scene = new Scene(root, 714.0, 440.0);
-		Photos.window.setScene(scene);
-		Photos.window.setTitle("Login Page");
-		Photos.window.setResizable(false);
-		Photos.window.show();
+		setStage("Login Page", "../view/nonadmin.fxml");
 	}
 	/**
 	 * Method is called when an item is selected from the photo list

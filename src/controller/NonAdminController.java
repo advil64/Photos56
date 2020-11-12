@@ -35,25 +35,26 @@ public class NonAdminController extends Photos implements Serializable{
 	
 	public void start(Stage mainStage) throws ClassNotFoundException, IOException {
 		//display the album list for user who signed in
-		userList.get(userList.indexOf(currUser)).setAlbums(readApp2());
-		albumlist.setItems(userList.get(userList.indexOf(currUser)).getAlbums());
+		currUser.setAlbums(readApp2());
+		albumlist.setItems(currUser.getAlbums());
 	}
 	
 	public static void writeApp2(ObservableList<Album> myUsers) throws IOException{
     	FileOutputStream fos = new FileOutputStream("../data/" + currUser.getUsername() + "/" + "albums.dat");
-		ObjectOutputStream oos = new ObjectOutputStream(fos);
+    	ObjectOutputStream oos = new ObjectOutputStream(fos);
 		for(Album x : myUsers) {
 			oos.writeObject(x.toString());
 		}
 	}
 	
 	public static ObservableList<Album> readApp2() throws IOException, ClassNotFoundException{
+
     	//create the file if it doesn't exist
     	File temp = new File("../data/" + currUser.getUsername() + "/" + "albums.dat");
     	temp.createNewFile();
-    	
     	ObservableList<Album> gapp = FXCollections.observableArrayList();
     	ObjectInputStream ois;
+
     	try{
     		ois = new ObjectInputStream(new FileInputStream("../data/" + currUser.getUsername() + "/" + "albums.dat"));
     	} catch(EOFException e) {
@@ -89,38 +90,31 @@ public class NonAdminController extends Photos implements Serializable{
 	 */
 	@FXML
 	private void create() throws IOException {
+
 		//get the name of the album first and run checks
 		String albumName = album_textfield.getText().trim();
-
 		if(albumName.equals("")) {
-			Photos.setErrorWindow("Invalid Album Name", "Please make sure you enter a valid album name");
+			setErrorWindow("Invalid Album Name", "Please make sure you enter a valid album name");
 			return;
 		}
 		
 		//create the album and add it to the list for that specific user
-		Album album = new Album(albumName, 0, null);
-		for(int i=0; i<userList.size(); i++) {
-			//check to see if album already exists
-			for(int j=0; j<userList.get(i).albums.size(); j++) {
-				if(userList.get(i).getAlbums().get(j).getAlbumName().equals(albumName)) {
-					Photos.setErrorWindow("Invalid Album Name", "Album already exists");
-					return;
-				}
-			}
-			//add album to albums arraylist in User Object and update the ListView
-			if(userList.get(i).getUsername().equals(currUser.getUsername())) {
-				userList.get(i).addAlbum(album);
-				albumlist.setItems(userList.get(i).getAlbums());
-				writeApp2(userList.get(i).getAlbums());
-				int size = userList.get(i).getAlbums().size();
-				albumlist.getSelectionModel().select(size-1);
-				break;
+		for (Album x: currUser.getAlbums()){
+			if(x.getAlbumName().equals(albumName)){
+				setErrorWindow("Invalid Album Name", "Album already exists");
+				return;
 			}
 		}
+
+		//otherwise we have a valid album name
+		Album newAlbum = new Album(albumName, 0, null);
+		currUser.getAlbums().add(newAlbum);
+		writeApp2(currUser.getAlbums());
+
 		//create a directory for the album
 		new File("../data/" + currUser.getUsername() + "/" + albumName).mkdir();
-		
 	}
+
 	/**
 	 * This method is engaged when the user clicks the rename button
 	 * Renames an album to the list
@@ -132,44 +126,21 @@ public class NonAdminController extends Photos implements Serializable{
 		String albumName = album_textfield.getText().trim();
 
 		if(albumName.equals("")) {
-			Photos.setErrorWindow("Invalid Album Name", "Please make sure you enter a valid album name");
+			setErrorWindow("Invalid Album Name", "Please make sure you enter a valid album name");
+			return;
+		} else if(albumlist.getSelectionModel().getSelectedIndex() < 0){
 			return;
 		}
-		//get the index selected
-		Album selectedIndex = albumlist.getSelectionModel().getSelectedItem();
-		String str = selectedIndex.getAlbumName();
-		
-		//find the user in the userlist and change it's album name
-		for(User i: userList) {
-			//finding the user
-			if(i.getUsername().equals(currUser.getUsername())) {
-				//check to see if renamed album already exists
-				for(Album j: i.getAlbums()) {
-					if(j.getAlbumName().equals(albumName)) {
-						Photos.setErrorWindow("Invalid Album Name", "Album name already exists");
-						return;
-					}
-				}
-				//set it's album name to albumName
-				for(Album j: i.getAlbums()) {
-					if(j.getAlbumName().equals(selectedIndex.getAlbumName())) {
-						Album temp2 = i.getAlbums().get(i.getAlbums().indexOf(j));
-						temp2.setAlbumName(albumName);
-						i.getAlbums().remove(i.getAlbums().indexOf(j));
-						i.getAlbums().add(temp2);
-						int size = i.getAlbums().size();
-						albumlist.setItems(i.getAlbums());
-						albumlist.getSelectionModel().select(size-1);
-						writeApp2(i.getAlbums());
-						break;
-					}
-				}
-			}
-		}
+
+		Album curr = albumlist.getSelectionModel().getSelectedItem();
+		String oldName = curr.getAlbumName();
+		curr.setAlbumName(albumName);
+		writeApp2(currUser.getAlbums());
+		albumlist.refresh();
+
 		//rename the album's directory
-		String original = "../data/" + currUser.getUsername() + "/" + str;
 		File newName = new File("../data/" + currUser.getUsername() + "/" + albumName);
-		File file = new File(original);
+		File file = new File("../data/" + currUser.getUsername() + "/" + oldName);
 		file.renameTo(newName);
 	}
 	
@@ -180,26 +151,18 @@ public class NonAdminController extends Photos implements Serializable{
 	 */
 	@FXML
 	private void delete() throws IOException {
-		int index = albumlist.getSelectionModel().getSelectedIndex();
+
 		//if nothing is select
-		if(index == -1) {
-			Photos.setErrorWindow("Cannot Delete", "Please make sure you select an item from the list");
+		if(albumlist.getSelectionModel().getSelectedIndex() < 0) {
+			setErrorWindow("Cannot Delete", "Please make sure you select an item from the list");
 			return;
 		}
-		Album temp = albumlist.getSelectionModel().getSelectedItem();
+
 		//remove album from User's album list
-		for(User i: userList) {
-			if(i.getUsername().equals(currUser.getUsername())) {
-				for(Album j: i.getAlbums()) {
-					if(j.getAlbumName().equals(temp.getAlbumName())) {
-						i.getAlbums().remove(temp);
-						albumlist.setItems(i.getAlbums());
-						writeApp2(i.getAlbums());
-						break;
-					}
-				}
-			}
-		}
+		Album temp = albumlist.getSelectionModel().getSelectedItem();
+		currUser.getAlbums().remove(temp);
+		writeApp2(currUser.getAlbums());
+
 		//delete the directory
 		File file = new File("../data/" + currUser.getUsername() + "/" + temp.getAlbumName());
 		if(file.isDirectory() && file != null) {
@@ -230,41 +193,23 @@ public class NonAdminController extends Photos implements Serializable{
 	 * @throws Exception 
 	 */
 	@FXML
-	private void openAlbum() throws Exception {
+	private void openAlbum() throws IOException, ClassNotFoundException {
 		//make sure an album is selected
 		if(albumlist.getSelectionModel().getSelectedIndex() == -1) {
-			Photos.setErrorWindow("Cannot Open Album", "Please make sure you select an album");
+			setErrorWindow("Cannot Open Album", "Please make sure you select an album");
 			return;
 		}
 		openedAlbum = albumlist.getSelectionModel().getSelectedItem();
 		//setting the scene to open album page
-			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(getClass().getResource("../view/openAlbum.fxml"));
-			root = (AnchorPane)loader.load();
-			openAlbumController= loader.getController();
-			openAlbumController.start(Photos.window);
-			scene = new Scene(root, 714.0, 440.0);
-			Photos.window.setScene(scene);
-			Photos.window.setTitle("Open Album");
-			Photos.window.setResizable(false);
-			Photos.window.show();
+		setStage("Open Album", "../view/openAlbum.fxml");
 	}
 	/**
 	 * This method is engaged when the user clicks the search photos button which sets the scene to the searchPhotos page
 	 * @throws IOException 
 	 */
 	@FXML
-	private void searchPhotos() throws IOException {
-		FXMLLoader loader = new FXMLLoader();
-		loader.setLocation(getClass().getResource("../view/searchPhotos.fxml"));
-		root = (AnchorPane)loader.load();
-		searchPhotosController= loader.getController();
-		searchPhotosController.start(Photos.window);
-		scene = new Scene(root, 714.0, 440.0);
-		Photos.window.setScene(scene);
-		Photos.window.setTitle("Searching Photos");
-		Photos.window.setResizable(false);
-		Photos.window.show();
+	private void searchPhotos() throws IOException, ClassNotFoundException{
+		setStage("Searching Photos", "../view/searchPhotos.fxml");
 	}
 	
 	/**
@@ -274,16 +219,6 @@ public class NonAdminController extends Photos implements Serializable{
 	 */
 	@FXML
 	private void logout() throws IOException, ClassNotFoundException {
-		//setting the scene back to the login page
-		FXMLLoader loader = new FXMLLoader();
-		loader.setLocation(getClass().getResource("../view/login.fxml"));
-		root = (AnchorPane)loader.load();
-		controller= loader.getController();
-		controller.start(Photos.window);
-		Scene scene = new Scene(root, 714.0, 440.0);
-		Photos.window.setScene(scene);
-		Photos.window.setTitle("Login Page");
-		Photos.window.setResizable(false);
-		Photos.window.show();
+		setStage("Login Page", "../view/login.fxml");
 	}
 }

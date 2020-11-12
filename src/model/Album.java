@@ -37,7 +37,7 @@ public class Album implements Serializable{
      */
     public void addPhoto(Photo newPhoto){
         albumPhotos.add(newPhoto);
-        numPhotos++;
+        this.numPhotos++;
 
         //set new date range
         Collections.sort(albumPhotos);

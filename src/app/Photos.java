@@ -35,16 +35,16 @@ import javafx.scene.layout.AnchorPane;
 
 public class Photos extends Application implements Serializable{
 
-    public Scene scene;
-    public AnchorPane root;
-    public Controller controller;
-    public AdminController adminController;
-    public NonAdminController nonAdminController;
-    public OpenAlbumController openAlbumController;
-    public SlideShowController slideShowController;
-    public SearchPhotosController searchPhotosController;
-    public static Stage window;
-    public static Alert errorWindow;
+    private Scene scene;
+    private AnchorPane root;
+    private Controller controller;
+    private AdminController adminController;
+    private NonAdminController nonAdminController;
+    private OpenAlbumController openAlbumController;
+    private SlideShowController slideShowController;
+    private SearchPhotosController searchPhotosController;
+    private static Stage window;
+    private static Alert errorWindow;
     
   	public static final String storeFile= "../data/users.dat";
     
@@ -61,16 +61,7 @@ public class Photos extends Application implements Serializable{
 			dir.mkdir();
 		}
         window = primaryStage;
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("../view/login.fxml"));
-        root = (AnchorPane)loader.load();
-        controller= loader.getController();
-        controller.start(primaryStage);
-        scene = new Scene(root, 714.0, 440.0);
-        primaryStage.setScene(scene);
-        primaryStage.setTitle("Login Page");
-        primaryStage.setResizable(false);
-        primaryStage.show();
+		setStage("Login Page", "../view/login.fxml");
         errorWindow = new Alert(AlertType.ERROR);
         errorWindow.initOwner(primaryStage);
     }
@@ -131,14 +122,61 @@ public class Photos extends Application implements Serializable{
     
     /**
      * Sets the error window
-     * @param header
-     * @param body
+     * @param header header label
+     * @param body body content
      */
-    public static void setErrorWindow(String header, String body){
+    public void setErrorWindow(String header, String body){
         errorWindow.setTitle("Error");
         errorWindow.setHeaderText(header);
         errorWindow.setContentText(body);
         errorWindow.showAndWait();
+    }
+
+    /**
+     * set the scene to the non-admin page
+     * @param title title label
+     * @param resource resource to be loaded
+     * @throws IOException thrown when resource can't be found
+     * @throws ClassNotFoundException
+     */
+    public void setStage(String title, String resource) throws IOException, ClassNotFoundException {
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource(resource));
+        root = (AnchorPane)loader.load();
+        //figure out which controller to show
+        switch (resource){
+            case "../view/admin.fxml":
+                adminController = loader.getController();
+                adminController.start(window);
+                break;
+            case "../view/nonadmin.fxml":
+                nonAdminController = loader.getController();
+                nonAdminController.start(window);
+                break;
+            case "../view/login.fxml":
+                controller = loader.getController();
+                controller.start(window);
+                break;
+            case "../view/openAlbum.fxml":
+                openAlbumController = loader.getController();
+                openAlbumController.start(window);
+                break;
+            case "../view/searchPhotos.fxml":
+                searchPhotosController = loader.getController();
+                searchPhotosController.start(window);
+                break;
+            case "../view/slideshow.fxml":
+                slideShowController = loader.getController();
+                slideShowController.start(window);
+                break;
+            default:
+                throw new ClassNotFoundException();
+        }
+        Scene scene = new Scene(root, 714.0, 440.0);
+        window.setScene(scene);
+        window.setTitle(title);
+        window.setResizable(false);
+        window.show();
     }
 }
     

@@ -37,17 +37,7 @@ public class AdminController extends Photos implements Serializable{
 	 */
 	@FXML
 	private void logout() throws IOException, ClassNotFoundException {
-		//setting the scene back to the login page
-		FXMLLoader loader = new FXMLLoader();
-		loader.setLocation(getClass().getResource("../view/login.fxml"));
-		root = (AnchorPane)loader.load();
-		controller= loader.getController();
-		controller.start(Photos.window);
-		Scene scene = new Scene(root, 714.0, 440.0);
-		Photos.window.setScene(scene);
-		Photos.window.setTitle("Login Page");
-		Photos.window.setResizable(false);
-		Photos.window.show();
+		setStage("Login Page", "../view/login.fxml");
 	}
 	
 	/**
@@ -60,18 +50,18 @@ public class AdminController extends Photos implements Serializable{
 		String username = username_textfield.getText().trim();
 		//error if nothing is entered in the text field
 		if(username.equals("")) {
-			Photos.setErrorWindow("Invalid Entry", "Please make sure you enter a valid username");
+			setErrorWindow("Invalid Entry", "Please make sure you enter a valid username");
 			return;
 		}
 		//trying to add admin to user list
 		if(username.trim().equals("admin")) {
-			Photos.setErrorWindow("Invalid Entry", "Please make sure you enter a valid username");
+			setErrorWindow("Invalid Entry", "Please make sure you enter a valid username");
 			return;
 		}
 		//no duplicate users
 		for(int i=0; i<userList.size(); i++) {
 			if(userList.get(i).getUsername().equals(username)) {
-				Photos.setErrorWindow("Invalid Entry", "Username already exists");
+				setErrorWindow("Invalid Entry", "Username already exists");
 				return;
 			}
 		}
@@ -94,7 +84,7 @@ public class AdminController extends Photos implements Serializable{
 	private void delete() throws IOException{
 		//if nothing is selected and user clicks delete
 		if(username_list.getSelectionModel().getSelectedItem() == null || username_list.getSelectionModel().getSelectedIndex() == -1) {
-			Photos.setErrorWindow("Error", "Please select an item before deleting");
+			setErrorWindow("Error", "Please select an item before deleting");
 			return;
 		}
 		String username = username_list.getSelectionModel().getSelectedItem().getUsername();

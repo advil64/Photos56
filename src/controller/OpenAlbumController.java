@@ -78,14 +78,15 @@ public class OpenAlbumController extends NonAdminController implements Serializa
 	 * @throws IOException 
 	 * @throws ClassNotFoundException 
 	 */
-	public void start(Stage mainStage) throws ClassNotFoundException, IOException{
-		//setting the combobox default values
+	public void start(Stage mainStage){
+
+		//setting the combo box default values
 		tagTypeBox.getItems().setAll("Location", "Person");
+
 		//populating the listview of captions and photos
 		try {
 			openedAlbum.setPhotos(readApp3());
 		} catch (ClassNotFoundException | IOException | ParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		setPhotos();
@@ -99,16 +100,7 @@ public class OpenAlbumController extends NonAdminController implements Serializa
 	 */
 	@FXML
 	private void back() throws IOException, ClassNotFoundException {
-		FXMLLoader loader = new FXMLLoader();
-		loader.setLocation(getClass().getResource("../view/nonadmin.fxml"));
-		root = (AnchorPane)loader.load();
-		nonAdminController= loader.getController();
-		nonAdminController.start(Photos.window);
-		Scene scene = new Scene(root, 714.0, 440.0);
-		Photos.window.setScene(scene);
-		Photos.window.setTitle("Login Page");
-		Photos.window.setResizable(false);
-		Photos.window.show();
+		setStage("Login Page", "../view/nonadmin.fxml");
 	}
 	
 	/**
@@ -127,17 +119,8 @@ public class OpenAlbumController extends NonAdminController implements Serializa
 	 * @throws IOException 
 	 */
 	@FXML
-	private void slideShow() throws IOException {
-		FXMLLoader loader = new FXMLLoader();
-		loader.setLocation(getClass().getResource("../view/slideshow.fxml"));
-		root = (AnchorPane)loader.load();
-		slideShowController= loader.getController();
-		slideShowController.start(Photos.window);
-		scene = new Scene(root, 714.0, 440.0);
-		Photos.window.setScene(scene);
-		Photos.window.setTitle("Slide Show");
-		Photos.window.setResizable(false);
-		Photos.window.show();
+	private void slideShow() throws IOException, ClassNotFoundException {
+		setStage("Slide Show", "../view/slideshow.fxml");
 	}
 	
 	/**
@@ -148,7 +131,7 @@ public class OpenAlbumController extends NonAdminController implements Serializa
 	private void captionRecaption() throws IOException {
 		int index = photoList.getSelectionModel().getSelectedIndex();
 		if(index == -1) {
-			Photos.setErrorWindow("Error", "Please select an item from the list");
+			setErrorWindow("Error", "Please select an item from the list");
 			return;
 		}
 		Photo curr = photoList.getSelectionModel().getSelectedItem();
@@ -156,12 +139,12 @@ public class OpenAlbumController extends NonAdminController implements Serializa
 
 		//error if nothing is entered in the text field
 		if(cap.equals("")) {
-			Photos.setErrorWindow("Invalid Entry", "Please make sure you enter a valid caption");
+			setErrorWindow("Invalid Entry", "Please make sure you enter a valid caption");
 			return;
 		}
 		curr.setCaption(cap);
 		writeApp3(openedAlbum.getPhotos());
-		setPhotos();
+		photoList.refresh();
 	}
 	
 	/**
@@ -188,7 +171,7 @@ public class OpenAlbumController extends NonAdminController implements Serializa
 	private void removePhoto() throws IOException {
 		int index = photoList.getSelectionModel().getSelectedIndex();
 		if(index == -1) {
-			Photos.setErrorWindow("Error", "Please select a photo before removing");
+			setErrorWindow("Error", "Please select a photo before removing");
 			return;
 		}
 		openedAlbum.getPhotos().remove(photoList.getSelectionModel().getSelectedItem());
@@ -262,7 +245,9 @@ public class OpenAlbumController extends NonAdminController implements Serializa
 	    }
 		//write to photo.dat file
 		writeApp3(openedAlbum.getPhotos());
+		writeApp2(currUser.getAlbums());
 	}
+
 	public static void writeApp3(ObservableList<Photo> myUsers) throws IOException{
     	FileOutputStream fos = new FileOutputStream("../data/" + currUser.getUsername() + "/" + openedAlbum.getAlbumName() + "/photo.dat");
 		ObjectOutputStream oos = new ObjectOutputStream(fos);
