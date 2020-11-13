@@ -169,6 +169,7 @@ public class NonAdminController extends Photos implements Serializable{
 		}
 		openedAlbum = albumlist.getSelectionModel().getSelectedItem();
 		//setting the scene to open album page
+		combo = ReadWrite.readCombo(currUser);
 		setStage("Open Album", "../view/openAlbum.fxml");
 	}
 	/**
