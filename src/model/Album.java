@@ -35,14 +35,29 @@ public class Album implements Serializable{
      * @param newPhoto photo to be added to the album
      */
     public void addPhoto(Photo newPhoto){
-        albumPhotos.add(newPhoto);
+        this.albumPhotos.add(newPhoto);
         this.numPhotos++;
 
         //set new date range
         Collections.sort(albumPhotos);
-        dateRange = albumPhotos.get(0).getDateTime().toString();
-        dateRange = dateRange + " - ";
-        dateRange = dateRange + albumPhotos.get(albumPhotos.size()-1).getDateTime().toString();
+        this.dateRange = albumPhotos.get(0).getDateTime().toString();
+        this.dateRange = dateRange + " - ";
+        this.dateRange = dateRange + albumPhotos.get(albumPhotos.size()-1).getDateTime().toString();
+    }
+
+    public void removePhoto(Photo oldPhoto){
+        this.albumPhotos.remove(oldPhoto);
+        this.numPhotos--;
+
+        //set new date range
+        if(this.numPhotos > 0) {
+            Collections.sort(albumPhotos);
+            this.dateRange = albumPhotos.get(0).getDateTime().toString();
+            this.dateRange = dateRange + " - ";
+            this.dateRange = dateRange + albumPhotos.get(albumPhotos.size() - 1).getDateTime().toString();
+        } else{
+            this.dateRange = "";
+        }
     }
 
     /**

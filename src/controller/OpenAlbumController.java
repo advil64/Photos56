@@ -1,37 +1,22 @@
 package controller;
 
-import app.Photos;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import model.Album;
 import model.Photo;
-import model.User;
 
-import java.io.EOFException;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
-import java.text.DateFormat;
+import java.io.*;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 /**
  * This class is used to control the OpenAlbum page
@@ -72,7 +57,8 @@ public class OpenAlbumController extends NonAdminController implements Serializa
 	 * The text field for user inputted tag type
 	 */
 	@FXML TextField tagTypeText;
-	
+	@FXML ComboBox<String> moveTypeBox;
+
 	/**
 	 * This method is triggered at the start of the openAlbum page
 	 * @throws IOException 
@@ -83,9 +69,16 @@ public class OpenAlbumController extends NonAdminController implements Serializa
 		//setting the combo box default values
 		tagTypeBox.getItems().setAll("Location", "Person");
 
+		//getting albums
+		ArrayList<String> myAlbums = new ArrayList<>();
+		for (Album x: currUser.getAlbums()){
+			myAlbums.add(x.getAlbumName());
+		}
+		moveTypeBox.getItems().setAll(myAlbums);
+
 		//populating the listview of captions and photos
 		try {
-			openedAlbum.setPhotos(readApp3());
+			openedAlbum.setPhotos(readApp3(openedAlbum));
 		} catch (ClassNotFoundException | IOException | ParseException e) {
 			e.printStackTrace();
 		}
@@ -129,8 +122,7 @@ public class OpenAlbumController extends NonAdminController implements Serializa
 	 */
 	@FXML
 	private void captionRecaption() throws IOException {
-		int index = photoList.getSelectionModel().getSelectedIndex();
-		if(index == -1) {
+		if(photoList.getSelectionModel().getSelectedIndex() < 0) {
 			setErrorWindow("Error", "Please select an item from the list");
 			return;
 		}
@@ -143,7 +135,8 @@ public class OpenAlbumController extends NonAdminController implements Serializa
 			return;
 		}
 		curr.setCaption(cap);
-		writeApp3(openedAlbum.getPhotos());
+		writeApp3(openedAlbum);
+		writeApp2(currUser.getAlbums());
 		photoList.refresh();
 	}
 	
@@ -169,17 +162,14 @@ public class OpenAlbumController extends NonAdminController implements Serializa
 	 */
 	@FXML
 	private void removePhoto() throws IOException {
-		int index = photoList.getSelectionModel().getSelectedIndex();
-		if(index == -1) {
+		if(photoList.getSelectionModel().getSelectedIndex() < 0) {
 			setErrorWindow("Error", "Please select a photo before removing");
 			return;
 		}
-		openedAlbum.getPhotos().remove(photoList.getSelectionModel().getSelectedItem());
-		writeApp3(openedAlbum.getPhotos());
-		Photo temp = photoList.getSelectionModel().getSelectedItem();
-		if(temp != null) {
-			captionTextField.setText(temp.getCaption());
-		}
+		Photo currPhoto = photoList.getSelectionModel().getSelectedItem();
+		openedAlbum.removePhoto(currPhoto);
+		writeApp2(currUser.getAlbums());
+		writeApp3(openedAlbum);
 	}
 	
 	/**
@@ -187,7 +177,38 @@ public class OpenAlbumController extends NonAdminController implements Serializa
 	 */
 	@FXML
 	private void movePhoto() {
-		
+		if(photoList.getSelectionModel().getSelectedIndex() < 0) {
+			setErrorWindow("Error", "Please select a photo before moving to different album");
+			return;
+		}
+	}
+
+	@FXML
+	private void selectPhoto() throws IOException, ClassNotFoundException, ParseException {
+		String myAlbumName = moveTypeBox.getValue();
+		Photo currPhoto = photoList.getSelectionModel().getSelectedItem();
+
+		//check if user tries to move it into current album
+		if(myAlbumName.equals(openedAlbum.albumName)){
+			setErrorWindow("Unable to Comply", "Photo already exists in chosen album");
+		} else{
+			//get the chosen album
+			for(Album x: currUser.getAlbums()){
+				if(myAlbumName.equals(x.getAlbumName())){
+
+					//load in the current images first
+					x.setPhotos(readApp3(x));
+
+					//then add the photo in and rewrite
+					x.addPhoto(currPhoto);
+					openedAlbum.removePhoto(currPhoto);
+					writeApp3(x);
+				}
+			}
+			photoList.refresh();
+			writeApp3(openedAlbum);
+			writeApp2(currUser.getAlbums());
+		}
 	}
 	
 	/**
@@ -243,28 +264,27 @@ public class OpenAlbumController extends NonAdminController implements Serializa
 	        currUser.addPhoto(newPhoto);
 	        setPhotos();
 	    }
-		//write to photo.dat file
-		writeApp3(openedAlbum.getPhotos());
+		writeApp3(openedAlbum);
 		writeApp2(currUser.getAlbums());
 	}
 
-	public static void writeApp3(ObservableList<Photo> myUsers) throws IOException{
-    	FileOutputStream fos = new FileOutputStream("../data/" + currUser.getUsername() + "/" + openedAlbum.getAlbumName() + "/photo.dat");
+	public static void writeApp3(Album myAlbum) throws IOException{
+    	FileOutputStream fos = new FileOutputStream("../data/" + currUser.getUsername() + "/" + myAlbum.getAlbumName() + "/photo.dat");
 		ObjectOutputStream oos = new ObjectOutputStream(fos);
-		for(Photo x : myUsers) {
+		for(Photo x : myAlbum.getPhotos()) {
 			oos.writeObject(x.toString());
 		}
 	}
 	
-	public static ObservableList<Photo> readApp3() throws IOException, ClassNotFoundException, ParseException{
+	public static ObservableList<Photo> readApp3(Album myAlbum) throws IOException, ClassNotFoundException, ParseException{
     	//create the file if it doesn't exist
-    	File temp = new File("../data/" + currUser.getUsername() + "/" + openedAlbum.getAlbumName() + "/photo.dat");
+    	File temp = new File("../data/" + currUser.getUsername() + "/" + myAlbum.getAlbumName() + "/photo.dat");
     	temp.createNewFile();
     	
     	ObservableList<Photo> gapp = FXCollections.observableArrayList();
     	ObjectInputStream ois;
     	try{
-    		ois = new ObjectInputStream(new FileInputStream("../data/" + currUser.getUsername() + "/" + openedAlbum.getAlbumName() + "/photo.dat"));
+    		ois = new ObjectInputStream(new FileInputStream("../data/" + currUser.getUsername() + "/" + myAlbum.getAlbumName() + "/photo.dat"));
     	} catch(EOFException e) {
 			return gapp;
 		}

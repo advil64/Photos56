@@ -107,7 +107,7 @@ public class NonAdminController extends Photos implements Serializable{
 		}
 
 		//otherwise we have a valid album name
-		Album newAlbum = new Album(albumName, 0, null);
+		Album newAlbum = new Album(albumName, 0, "");
 		currUser.getAlbums().add(newAlbum);
 		writeApp2(currUser.getAlbums());
 
