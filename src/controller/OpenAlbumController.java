@@ -1,5 +1,6 @@
 package controller;
 
+import app.ReadWrite;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -38,11 +39,11 @@ public class OpenAlbumController extends NonAdminController implements Serializa
 	 */
 	@FXML ListView<String> tagsList;
 	/**
-	 * The tags textfield used for obtaining data
+	 * The tags text field used for obtaining data
 	 */
 	@FXML TextField tagsTextField;
 	/**
-	 * The caption textfield used for obtaining data
+	 * The caption text field used for obtaining data
 	 */
 	@FXML TextField captionTextField;
 	/**
@@ -61,8 +62,6 @@ public class OpenAlbumController extends NonAdminController implements Serializa
 
 	/**
 	 * This method is triggered at the start of the openAlbum page
-	 * @throws IOException 
-	 * @throws ClassNotFoundException 
 	 */
 	public void start(Stage mainStage){
 
@@ -78,8 +77,8 @@ public class OpenAlbumController extends NonAdminController implements Serializa
 
 		//populating the listview of captions and photos
 		try {
-			openedAlbum.setPhotos(readApp3(openedAlbum));
-		} catch (ClassNotFoundException | IOException | ParseException e) {
+			openedAlbum.setPhotos(ReadWrite.readPhotos(openedAlbum, currUser));
+		} catch (ClassNotFoundException | IOException e) {
 			e.printStackTrace();
 		}
 		setPhotos();
@@ -97,14 +96,18 @@ public class OpenAlbumController extends NonAdminController implements Serializa
 	}
 	
 	/**
-	 * This method displays the image in the image view when an item is clicked on in the photolist
+	 * This method displays the image in the image view when an item is clicked on in the photo list
 	 */
 	@FXML
 	private void displayImage(){
-		Photo curr = photoList.getSelectionModel().getSelectedItem();
-		image.setImage(curr.getPhoto());
-		datetimeLabel.setText(curr.getDateTime().toString());
-		captionTextField.setText(curr.getCaption());
+		try {
+			Photo curr = photoList.getSelectionModel().getSelectedItem();
+			image.setImage(curr.getPhoto());
+			datetimeLabel.setText(curr.getDateTime().toString());
+			captionTextField.setText(curr.getCaption());
+		} catch(Exception e){
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -135,8 +138,8 @@ public class OpenAlbumController extends NonAdminController implements Serializa
 			return;
 		}
 		curr.setCaption(cap);
-		writeApp3(openedAlbum);
-		writeApp2(currUser.getAlbums());
+		ReadWrite.writePhotos(openedAlbum, currUser);
+		ReadWrite.writeAlbums(currUser.getAlbums(), currUser);
 		photoList.refresh();
 	}
 	
@@ -168,8 +171,8 @@ public class OpenAlbumController extends NonAdminController implements Serializa
 		}
 		Photo currPhoto = photoList.getSelectionModel().getSelectedItem();
 		openedAlbum.removePhoto(currPhoto);
-		writeApp2(currUser.getAlbums());
-		writeApp3(openedAlbum);
+		ReadWrite.writeAlbums(currUser.getAlbums(), currUser);
+		ReadWrite.writePhotos(openedAlbum, currUser);
 	}
 	
 	/**
@@ -197,17 +200,17 @@ public class OpenAlbumController extends NonAdminController implements Serializa
 				if(myAlbumName.equals(x.getAlbumName())){
 
 					//load in the current images first
-					x.setPhotos(readApp3(x));
+					x.setPhotos(ReadWrite.readPhotos(x, currUser));
 
 					//then add the photo in and rewrite
 					x.addPhoto(currPhoto);
 					openedAlbum.removePhoto(currPhoto);
-					writeApp3(x);
+					ReadWrite.writePhotos(x, currUser);
 				}
 			}
 			photoList.refresh();
-			writeApp3(openedAlbum);
-			writeApp2(currUser.getAlbums());
+			ReadWrite.writePhotos(openedAlbum, currUser);
+			ReadWrite.writeAlbums(currUser.getAlbums(), currUser);
 		}
 	}
 	
@@ -264,54 +267,7 @@ public class OpenAlbumController extends NonAdminController implements Serializa
 	        currUser.addPhoto(newPhoto);
 	        setPhotos();
 	    }
-		writeApp3(openedAlbum);
-		writeApp2(currUser.getAlbums());
+		ReadWrite.writePhotos(openedAlbum, currUser);
+		ReadWrite.writeAlbums(currUser.getAlbums(), currUser);
 	}
-
-	public static void writeApp3(Album myAlbum) throws IOException{
-    	FileOutputStream fos = new FileOutputStream("../data/" + currUser.getUsername() + "/" + myAlbum.getAlbumName() + "/photo.dat");
-		ObjectOutputStream oos = new ObjectOutputStream(fos);
-		for(Photo x : myAlbum.getPhotos()) {
-			oos.writeObject(x.toString());
-		}
-	}
-	
-	public static ObservableList<Photo> readApp3(Album myAlbum) throws IOException, ClassNotFoundException, ParseException{
-    	//create the file if it doesn't exist
-    	File temp = new File("../data/" + currUser.getUsername() + "/" + myAlbum.getAlbumName() + "/photo.dat");
-    	temp.createNewFile();
-    	
-    	ObservableList<Photo> gapp = FXCollections.observableArrayList();
-    	ObjectInputStream ois;
-    	try{
-    		ois = new ObjectInputStream(new FileInputStream("../data/" + currUser.getUsername() + "/" + myAlbum.getAlbumName() + "/photo.dat"));
-    	} catch(EOFException e) {
-			return gapp;
-		}
-    	
-    	//read the .dat file and populate the observable list (list of albums)
-    	while(true) {
-    		try {
-    			String temp1 = (String)ois.readObject();
-    			//find substrings of caption, tags, datetime, photoPath
-    			int delimeter1 = temp1.indexOf("|");
-    			//getting the captions
-    			String caption = temp1.substring(0, delimeter1);
-    			int delimeter2 = temp1.lastIndexOf("|");
-    			ArrayList<String> tags = new ArrayList<>();
-    			//getting the tags
-    			String tagTemp = temp1.substring(delimeter1+2, delimeter2-1);
-    			String[] tagTemp2 = tagTemp.split(",");
-    			for(String x: tagTemp2) {
-    				tags.add(x);
-    			}
-    			//getting the location
-    			String location = temp1.substring(delimeter2+1);
-    			gapp.add(new Photo(caption,tags,location));
-
-    		} catch (EOFException e) {
-    			return gapp;
-    		}
-    	}
-    }
 }

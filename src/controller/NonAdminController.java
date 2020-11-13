@@ -4,6 +4,7 @@
 */
 package controller;
 
+import app.ReadWrite;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.ListView;
@@ -35,52 +36,9 @@ public class NonAdminController extends Photos implements Serializable{
 	
 	public void start(Stage mainStage) throws ClassNotFoundException, IOException {
 		//display the album list for user who signed in
-		currUser.setAlbums(readApp2());
+		ReadWrite.readAlbums(currUser);
 		albumlist.setItems(currUser.getAlbums());
 	}
-	
-	public static void writeApp2(ObservableList<Album> myUsers) throws IOException{
-    	FileOutputStream fos = new FileOutputStream("../data/" + currUser.getUsername() + "/" + "albums.dat");
-    	ObjectOutputStream oos = new ObjectOutputStream(fos);
-		for(Album x : myUsers) {
-			oos.writeObject(x.toString());
-		}
-	}
-	
-	public static ObservableList<Album> readApp2() throws IOException, ClassNotFoundException{
-
-    	//create the file if it doesn't exist
-    	File temp = new File("../data/" + currUser.getUsername() + "/" + "albums.dat");
-    	temp.createNewFile();
-    	ObservableList<Album> gapp = FXCollections.observableArrayList();
-    	ObjectInputStream ois;
-
-    	try{
-    		ois = new ObjectInputStream(new FileInputStream("../data/" + currUser.getUsername() + "/" + "albums.dat"));
-    	} catch(EOFException e) {
-			return gapp;
-		}
-    	
-    	//read the .dat file and populate the observable list (list of albums)
-    	while(true) {
-    		try {
-    			String temp1 = (String)ois.readObject();
-    			//find substrings of album, num, and date range
-    			int delimeter1 = temp1.indexOf("\n");
-    			//album name
-    			String album = temp1.substring(12,delimeter1);
-    			int delimeter2 = temp1.lastIndexOf("\n");
-    			//number of photos
-    			int pnum = Integer.valueOf(temp1.substring(delimeter1+17,delimeter2));
-    			//date range
-    			String dateRange = temp1.substring(delimeter2+13);
-    			gapp.add(new Album(album,pnum,dateRange));
-    		} catch (EOFException e) {
-    			return gapp;
-    		}
-    	}
-    }
-    
 	
 	/**
 	 * This method is engaged when the user clicks the create button
@@ -109,7 +67,7 @@ public class NonAdminController extends Photos implements Serializable{
 		//otherwise we have a valid album name
 		Album newAlbum = new Album(albumName, 0, "");
 		currUser.getAlbums().add(newAlbum);
-		writeApp2(currUser.getAlbums());
+		ReadWrite.writeAlbums(currUser.getAlbums(), currUser);
 
 		//create a directory for the album
 		new File("../data/" + currUser.getUsername() + "/" + albumName).mkdir();
@@ -135,7 +93,7 @@ public class NonAdminController extends Photos implements Serializable{
 		Album curr = albumlist.getSelectionModel().getSelectedItem();
 		String oldName = curr.getAlbumName();
 		curr.setAlbumName(albumName);
-		writeApp2(currUser.getAlbums());
+		ReadWrite.writeAlbums(currUser.getAlbums(), currUser);
 		albumlist.refresh();
 
 		//rename the album's directory
@@ -161,7 +119,7 @@ public class NonAdminController extends Photos implements Serializable{
 		//remove album from User's album list
 		Album temp = albumlist.getSelectionModel().getSelectedItem();
 		currUser.getAlbums().remove(temp);
-		writeApp2(currUser.getAlbums());
+		ReadWrite.writeAlbums(currUser.getAlbums(), currUser);
 
 		//delete the directory
 		File file = new File("../data/" + currUser.getUsername() + "/" + temp.getAlbumName());

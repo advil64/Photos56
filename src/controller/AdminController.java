@@ -4,18 +4,16 @@
 */
 package controller;
 
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
+import app.Photos;
+import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import javafx.fxml.FXML;
-import java.io.*;
-import java.nio.file.Files;
-
-import app.Photos;
 import model.User;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.Serializable;
 
 /**
  * This class is used to control the Admin Page
