@@ -1,8 +1,6 @@
 package controller;
 
 import app.ReadWrite;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListCell;
@@ -15,8 +13,9 @@ import javafx.stage.Stage;
 import model.Album;
 import model.Photo;
 
-import java.io.*;
-import java.text.ParseException;
+import java.io.File;
+import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -59,6 +58,7 @@ public class OpenAlbumController extends NonAdminController implements Serializa
 	 */
 	@FXML TextField tagTypeText;
 	@FXML ComboBox<String> moveTypeBox;
+	@FXML ComboBox<String> copyComBox;
 
 	/**
 	 * This method is triggered at the start of the openAlbum page
@@ -74,6 +74,7 @@ public class OpenAlbumController extends NonAdminController implements Serializa
 			myAlbums.add(x.getAlbumName());
 		}
 		moveTypeBox.getItems().setAll(myAlbums);
+		copyComBox.getItems().setAll(myAlbums);
 
 		//populating the listview of captions and photos
 		try {
@@ -179,7 +180,7 @@ public class OpenAlbumController extends NonAdminController implements Serializa
 	 * This method is triggered when the move photo button is clicked
 	 */
 	@FXML
-	private void movePhoto() {
+	private void moveCopyPhoto() {
 		if(photoList.getSelectionModel().getSelectedIndex() < 0) {
 			setErrorWindow("Error", "Please select a photo before moving to different album");
 			return;
@@ -187,7 +188,7 @@ public class OpenAlbumController extends NonAdminController implements Serializa
 	}
 
 	@FXML
-	private void selectPhoto() throws IOException, ClassNotFoundException, ParseException {
+	private void movePhoto() throws IOException, ClassNotFoundException {
 		String myAlbumName = moveTypeBox.getValue();
 		Photo currPhoto = photoList.getSelectionModel().getSelectedItem();
 
@@ -212,14 +213,37 @@ public class OpenAlbumController extends NonAdminController implements Serializa
 			ReadWrite.writePhotos(openedAlbum, currUser);
 			ReadWrite.writeAlbums(currUser.getAlbums(), currUser);
 		}
+		moveTypeBox.getSelectionModel().clearSelection();
 	}
 	
 	/**
 	 * This method is triggered when the copy photo button is clicked
 	 */
 	@FXML
-	private void copyPhoto() {
-		
+	private void copyPhoto() throws IOException, ClassNotFoundException {
+		String myAlbumName = copyComBox.getValue();
+		Photo currPhoto = photoList.getSelectionModel().getSelectedItem();
+
+		//check if user tries to move it into current album
+		if(myAlbumName.equals(openedAlbum.albumName)){
+			setErrorWindow("Unable to Comply", "Photo already exists in chosen album");
+		} else{
+			//get the chosen album
+			for(Album x: currUser.getAlbums()){
+				if(myAlbumName.equals(x.getAlbumName())){
+
+					//load in the current images first
+					x.setPhotos(ReadWrite.readPhotos(x, currUser));
+
+					//then add the photo in and rewrite
+					x.addPhoto(currPhoto);
+					ReadWrite.writePhotos(x, currUser);
+				}
+			}
+			photoList.refresh();
+			ReadWrite.writeAlbums(currUser.getAlbums(), currUser);
+		}
+		copyComBox.getSelectionModel().clearSelection();
 	}
 
 	/**

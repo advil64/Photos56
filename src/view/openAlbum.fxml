@@ -28,8 +28,8 @@
       <TextField fx:id="captionTextField" layoutX="328.0" layoutY="257.0" prefHeight="26.0" prefWidth="155.0" />
       <Button fx:id="captionbttn" layoutX="277.0" layoutY="289.0" mnemonicParsing="false" onMouseClicked="#captionRecaption" prefHeight="26.0" prefWidth="209.0" text="Caption/Recaption" />
       <Button fx:id="removebttn" layoutX="575.0" layoutY="295.0" mnemonicParsing="false" onMouseClicked="#removePhoto" prefHeight="26.0" prefWidth="130.0" text="Remove Photo" />
-      <ComboBox fx:id="moveTypeBox" layoutX="575.0" layoutY="330.0" prefHeight="26.0" prefWidth="130.0" promptText="Move Photo" onMouseClicked="#movePhoto" onAction="#selectPhoto"/>
-      <Button fx:id="copybttn" layoutX="575.0" layoutY="364.0" mnemonicParsing="false" onMouseClicked="#copyPhoto" prefHeight="26.0" prefWidth="130.0" text="Copy Photo" />
+      <ComboBox fx:id="moveTypeBox" layoutX="575.0" layoutY="330.0" prefHeight="26.0" prefWidth="130.0" promptText="Move Photo" onMouseClicked="#moveCopyPhoto" onAction="#movePhoto"/>
+      <ComboBox fx:id="copyComBox" layoutX="575.0" layoutY="364.0" onMouseClicked="#moveCopyPhoto" prefHeight="26.0" prefWidth="130.0" promptText="Copy Photo" onAction="#copyPhoto"/>
       <Button fx:id="addbttn" layoutX="574.0" layoutY="400.0" mnemonicParsing="false" onMouseClicked="#addPhoto" prefHeight="26.0" prefWidth="130.0" text="Add Photo" />
       <ComboBox fx:id="tagTypeBox" layoutX="541.0" layoutY="165.0" prefWidth="150.0" promptText="choose" />
       <Label layoutX="482.0" layoutY="169.0" text="Tag Type:" />
