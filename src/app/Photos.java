@@ -52,6 +52,7 @@ public class Photos extends Application implements Serializable{
     public static ObservableList<User> userList = FXCollections.observableArrayList();
     //holds the username entered - to be used in NonAdminController
     public static User currUser;
+    public ObservableList<String> combo = FXCollections.observableArrayList();
 
 	@Override
     public void start(Stage primaryStage) throws Exception{

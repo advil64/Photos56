@@ -70,6 +70,8 @@ public class AdminController extends Photos implements Serializable{
 		writeApp(userList);
 		//create a user folder
 		new File("../data/" + username).mkdir();
+		//create the combo box date file
+		new File("../data/" + username + "/combo.dat");
 		
 	}
 	

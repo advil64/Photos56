@@ -1,6 +1,8 @@
 package controller;
 
 import app.ReadWrite;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListCell;
@@ -12,6 +14,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import model.Album;
 import model.Photo;
+import model.User;
 
 import java.io.File;
 import java.io.IOException;
@@ -59,14 +62,17 @@ public class OpenAlbumController extends NonAdminController implements Serializa
 	@FXML TextField tagTypeText;
 	@FXML ComboBox<String> moveTypeBox;
 	@FXML ComboBox<String> copyComBox;
+	
 
 	/**
 	 * This method is triggered at the start of the openAlbum page
+	 * @throws IOException 
+	 * @throws ClassNotFoundException 
 	 */
-	public void start(Stage mainStage){
-
+	public void start(Stage mainStage) throws ClassNotFoundException, IOException{
+		combo = ReadWrite.readCombo(currUser);
 		//setting the combo box default values
-		tagTypeBox.getItems().setAll("Location", "Person");
+		tagTypeBox.getItems().setAll(combo);
 
 		//getting albums
 		ArrayList<String> myAlbums = new ArrayList<>();
@@ -103,9 +109,11 @@ public class OpenAlbumController extends NonAdminController implements Serializa
 	private void displayImage(){
 		try {
 			Photo curr = photoList.getSelectionModel().getSelectedItem();
+			int index = photoList.getSelectionModel().getSelectedIndex();
 			image.setImage(curr.getPhoto());
 			datetimeLabel.setText(curr.getDateTime().toString());
 			captionTextField.setText(curr.getCaption());
+			tagsList.getItems().setAll(openedAlbum.getPhotos().get(index).getTags());
 		} catch(Exception e){
 			e.printStackTrace();
 		}
@@ -146,18 +154,98 @@ public class OpenAlbumController extends NonAdminController implements Serializa
 	
 	/**
 	 * This method is triggered when the add tag button is clicked
+	 * @throws IOException 
 	 */
 	@FXML
-	private void addTag() {
+	private void addTag() throws IOException {
+		String boxType = tagTypeBox.getSelectionModel().getSelectedItem();
+		String textType = tagTypeText.getText().trim();
+		String tag = tagsTextField.getText().trim();
+		if(photoList.getSelectionModel().getSelectedIndex() == -1) {
+			setErrorWindow("Error", "Please select an image");
+			return;
+		}
+		if(tag == null || tag.equals("")) {
+			setErrorWindow("Error", "Please enter a tag");
+			return;
+		}
+		if(boxType == null && (textType == null || textType.equals(""))) {
+			setErrorWindow("Error", "Please select an item from the combobox or input your own tag type");
+			return;
+		}
+		if(boxType == null && textType != null) {
+			setErrorWindow("Error", "Please select \"New\" from combo box to input cutom tag type");
+			return;
+		}
+		if(boxType.equals("New") && (textType == null || textType.equals(""))) {
+			setErrorWindow("Error", "Please enter a tag type in the combo box");
+			return;
+		}
+		//if the user chooses something from the combobox and for the textfield
+		if(!boxType.equals("New") && (!textType.equals("") && textType != null)) {
+			if(!boxType.equals(textType)) {
+				setErrorWindow("Error", "Please select new from the combo box or empty the tag type texfield");
+				return;
+			}
+		}
 		
+		//choosing something from the combobox
+		if(((textType == null || textType.equals("")) && boxType != null) || (boxType.equals(textType))) {
+			String result = boxType + ": " + tag;
+			Photo curr = photoList.getSelectionModel().getSelectedItem();
+			int index = openedAlbum.getPhotos().indexOf(curr);
+			//search for duplicates
+			for(String s: openedAlbum.getPhotos().get(index).getTags()) {
+				if(s.equals(result)) {
+					setErrorWindow("Error", "Tag already exists");
+					return;
+				}
+			}
+			openedAlbum.getPhotos().get(index).addTag(result);
+			ReadWrite.writePhotos(openedAlbum, currUser);
+			tagsList.getItems().setAll(openedAlbum.getPhotos().get(index).getTags());
+			return;
+		}
+		
+		//entering a new tag type
+		combo.add(textType);
+		tagTypeBox.getItems().setAll(combo);
+		String result = textType + ": " + tag;
+		Photo curr = photoList.getSelectionModel().getSelectedItem();
+		int index = openedAlbum.getPhotos().indexOf(curr);
+		//search for duplicates
+		for(String s: openedAlbum.getPhotos().get(index).getTags()) {
+			if(s.equals(result)) {
+				setErrorWindow("Error", "Tag already exists");
+				return;
+			}
+		}
+		openedAlbum.getPhotos().get(index).addTag(result);
+		ReadWrite.writePhotos(openedAlbum, currUser);
+		ReadWrite.writeCombo(combo, currUser);
+		tagsList.getItems().setAll(openedAlbum.getPhotos().get(index).getTags());
 	}
 	
 	/**
 	 * This method is triggered when the delete tag button is clicked
+	 * @throws IOException 
 	 */
 	@FXML
-	private void deleteTag() {
-		
+	private void deleteTag() throws IOException {
+		if(photoList.getSelectionModel().getSelectedIndex() == -1) {
+			setErrorWindow("Error", "Please select an image");
+			return;
+		}
+		if(tagsList.getSelectionModel().getSelectedIndex() == -1) {
+			setErrorWindow("Error", "Please select a tag");
+			return;
+		}
+		Photo curr = photoList.getSelectionModel().getSelectedItem();
+		int index = openedAlbum.getPhotos().indexOf(curr);
+		String temp = tagsList.getSelectionModel().getSelectedItem();
+		openedAlbum.getPhotos().get(index).removeTag(temp);
+		ReadWrite.writePhotos(openedAlbum, currUser);
+		tagsList.getItems().setAll(openedAlbum.getPhotos().get(index).getTags());	
 	}
 	
 	/**

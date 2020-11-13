@@ -44,6 +44,14 @@ public class Photo implements Comparable<Photo>{
     public void addTag(String tag){
         tags.add(tag);
     }
+    public void removeTag(String tag) {
+    	for(String s: tags) {
+    		if(s.equals(tag)) {
+    			tags.remove(s);
+    			break;
+    		}
+    	}
+    }
 
     public String getCaption() {
         return caption;

@@ -17,6 +17,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import java.io.*;
+import java.util.ArrayList;
 
 import app.Photos;
 
@@ -27,7 +28,6 @@ public class NonAdminController extends Photos implements Serializable{
 
 	@FXML TextField album_textfield;
 	@FXML ListView<Album> albumlist;
-	
 	/**
 	 * Album that is opened is stored
 	 */
@@ -35,6 +35,16 @@ public class NonAdminController extends Photos implements Serializable{
 
 	
 	public void start(Stage mainStage) throws ClassNotFoundException, IOException {
+		//setting up the combo box
+		File temp = new File("../data/" + currUser.getUsername() + "/combo.dat");
+        if(temp.exists() == false) {
+        	temp.createNewFile();
+        	combo.add("New");
+    		combo.add("Location");
+    		combo.add("Person");
+    		ReadWrite.writeCombo(combo, currUser);
+        }
+        combo = ReadWrite.readCombo(currUser);
 		//display the album list for user who signed in
 		ReadWrite.readAlbums(currUser);
 		albumlist.setItems(currUser.getAlbums());
