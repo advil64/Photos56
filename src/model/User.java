@@ -52,6 +52,9 @@ public class User {
     public void setAlbums(ObservableList<Album> albums) {
     	this.albums = albums;
     }
+    public void setPhotos(ObservableList<Photo> photos) {
+    	this.photos = photos;
+    }
 
     /**
      * Add a new album to the arraylist
@@ -67,6 +70,9 @@ public class User {
      */
     public void addPhoto(Photo newPhoto){
         photos.add(newPhoto);
+    }
+    public void removePhoto(Photo photo) {
+    	photos.remove(photo);
     }
 
     @Override

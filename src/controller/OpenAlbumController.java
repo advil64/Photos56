@@ -85,10 +85,12 @@ public class OpenAlbumController extends NonAdminController implements Serializa
 		//populating the listview of captions and photos
 		try {
 			openedAlbum.setPhotos(ReadWrite.readPhotos(openedAlbum, currUser));
+			//currUser.setPhotos(ReadWrite.readPhotos(openedAlbum, currUser));
 		} catch (ClassNotFoundException | IOException e) {
 			e.printStackTrace();
 		}
 		setPhotos();
+		
 	}
 	
 	/**
@@ -202,13 +204,19 @@ public class OpenAlbumController extends NonAdminController implements Serializa
 				}
 			}
 			openedAlbum.getPhotos().get(index).addTag(result);
+//			int pIndex = currUser.getPhotos().indexOf(curr);
+//			/////////////////////
+//			System.out.println(pIndex + " " + index);
+//			currUser.getPhotos().get(pIndex).addTag(result);
 			ReadWrite.writePhotos(openedAlbum, currUser);
 			tagsList.getItems().setAll(openedAlbum.getPhotos().get(index).getTags());
 			return;
 		}
 		
 		//entering a new tag type
-		combo.add(textType);
+		if(!combo.contains(textType)) {
+			combo.add(textType);
+		}
 		tagTypeBox.getItems().setAll(combo);
 		String result = textType + ": " + tag;
 		Photo curr = photoList.getSelectionModel().getSelectedItem();
@@ -221,6 +229,9 @@ public class OpenAlbumController extends NonAdminController implements Serializa
 			}
 		}
 		openedAlbum.getPhotos().get(index).addTag(result);
+//		//////////////////////////
+//		int pIndex = currUser.getPhotos().indexOf(curr);
+//		currUser.getPhotos().get(pIndex).addTag(result);
 		ReadWrite.writePhotos(openedAlbum, currUser);
 		ReadWrite.writeCombo(combo, currUser);
 		tagsList.getItems().setAll(openedAlbum.getPhotos().get(index).getTags());
@@ -244,6 +255,8 @@ public class OpenAlbumController extends NonAdminController implements Serializa
 		int index = openedAlbum.getPhotos().indexOf(curr);
 		String temp = tagsList.getSelectionModel().getSelectedItem();
 		openedAlbum.getPhotos().get(index).removeTag(temp);
+//		int pIndex = currUser.getPhotos().indexOf(curr);
+//		currUser.getPhotos().get(pIndex).removeTag(temp);
 		ReadWrite.writePhotos(openedAlbum, currUser);
 		tagsList.getItems().setAll(openedAlbum.getPhotos().get(index).getTags());	
 	}
@@ -260,6 +273,7 @@ public class OpenAlbumController extends NonAdminController implements Serializa
 		}
 		Photo currPhoto = photoList.getSelectionModel().getSelectedItem();
 		openedAlbum.removePhoto(currPhoto);
+//		currUser.getPhotos().remove(currPhoto);
 		ReadWrite.writeAlbums(currUser.getAlbums(), currUser);
 		ReadWrite.writePhotos(openedAlbum, currUser);
 	}
@@ -294,6 +308,7 @@ public class OpenAlbumController extends NonAdminController implements Serializa
 					//then add the photo in and rewrite
 					x.addPhoto(currPhoto);
 					openedAlbum.removePhoto(currPhoto);
+//					currUser.getPhotos().remove(currPhoto);
 					ReadWrite.writePhotos(x, currUser);
 				}
 			}
