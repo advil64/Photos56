@@ -1,19 +1,25 @@
 package controller;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Optional;
 
 import app.Photos;
 import app.ReadWrite;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -41,6 +47,7 @@ public class SearchPhotosController extends Photos{
 	@FXML ComboBox<String> tagConjunction;
 	@FXML TextField firstTag;
 	@FXML TextField secondTag;
+	@FXML Button createAlbum;
 	ArrayList<String> conj = new ArrayList<>();
 	ObservableList<Photo> list = FXCollections.observableArrayList();
 	
@@ -59,13 +66,55 @@ public class SearchPhotosController extends Photos{
 		conj.add("AND");
 		conj.add("OR");
 		tagConjunction.getItems().setAll(conj);
+		createAlbum.setOnAction(
+				new EventHandler<ActionEvent>() {
+					@Override
+					public void handle(ActionEvent event) {
+						TextInputDialog dialog = new TextInputDialog();
+						dialog.setTitle("Creating Album");
+						dialog.setHeaderText("Enter Album Name:");
+						Optional<String> result = dialog.showAndWait();
+						if (result.isPresent()){
+						   try {
+							create(result.get());
+							} catch (ClassNotFoundException | IOException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						}
+					}
+				});
+		
 	}
 	
 	/**
-	 * Method is called when create album button is clicked
+	 * Method to handle create album button
+	 * @throws IOException 
+	 * @throws ClassNotFoundException 
 	 */
-	@FXML
-	private void create() {
+	private void create(String albumName) throws ClassNotFoundException, IOException {
+		//loop through the albums and check if name already exists
+		for(Album x: currUser.getAlbums()) {
+			if(x.getAlbumName().equals(albumName.trim())) {
+				setErrorWindow("Error", "Album name already exists");
+				return;
+			}
+		}
+		//TODO get the size of the photolist to set the num. of photos value in album
+		//TODO get the date range of the photolist to set the date range in album
+		
+		//create the album
+		Album newAlbum = new Album(albumName, 0, "");
+		currUser.getAlbums().add(newAlbum);
+		ReadWrite.writeAlbums(currUser.getAlbums(), currUser);
+
+		//create a directory for the album
+		new File("../data/" + currUser.getUsername() + "/" + albumName).mkdir();
+		
+		//TODO add all photos to album
+		
+		//TODO write photos to file
+		
 		
 	}
 	/**

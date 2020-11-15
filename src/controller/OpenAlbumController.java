@@ -112,6 +112,9 @@ public class OpenAlbumController extends NonAdminController implements Serializa
 		try {
 			Photo curr = photoList.getSelectionModel().getSelectedItem();
 			int index = photoList.getSelectionModel().getSelectedIndex();
+			if(curr == null) {
+				return;
+			}
 			image.setImage(curr.getPhoto());
 			datetimeLabel.setText(curr.getDateTime().toString());
 			captionTextField.setText(curr.getCaption());
@@ -204,10 +207,6 @@ public class OpenAlbumController extends NonAdminController implements Serializa
 				}
 			}
 			openedAlbum.getPhotos().get(index).addTag(result);
-//			int pIndex = currUser.getPhotos().indexOf(curr);
-//			/////////////////////
-//			System.out.println(pIndex + " " + index);
-//			currUser.getPhotos().get(pIndex).addTag(result);
 			ReadWrite.writePhotos(openedAlbum, currUser);
 			tagsList.getItems().setAll(openedAlbum.getPhotos().get(index).getTags());
 			return;
@@ -229,9 +228,6 @@ public class OpenAlbumController extends NonAdminController implements Serializa
 			}
 		}
 		openedAlbum.getPhotos().get(index).addTag(result);
-//		//////////////////////////
-//		int pIndex = currUser.getPhotos().indexOf(curr);
-//		currUser.getPhotos().get(pIndex).addTag(result);
 		ReadWrite.writePhotos(openedAlbum, currUser);
 		ReadWrite.writeCombo(combo, currUser);
 		tagsList.getItems().setAll(openedAlbum.getPhotos().get(index).getTags());
@@ -255,8 +251,6 @@ public class OpenAlbumController extends NonAdminController implements Serializa
 		int index = openedAlbum.getPhotos().indexOf(curr);
 		String temp = tagsList.getSelectionModel().getSelectedItem();
 		openedAlbum.getPhotos().get(index).removeTag(temp);
-//		int pIndex = currUser.getPhotos().indexOf(curr);
-//		currUser.getPhotos().get(pIndex).removeTag(temp);
 		ReadWrite.writePhotos(openedAlbum, currUser);
 		tagsList.getItems().setAll(openedAlbum.getPhotos().get(index).getTags());	
 	}
@@ -308,7 +302,6 @@ public class OpenAlbumController extends NonAdminController implements Serializa
 					//then add the photo in and rewrite
 					x.addPhoto(currPhoto);
 					openedAlbum.removePhoto(currPhoto);
-//					currUser.getPhotos().remove(currPhoto);
 					ReadWrite.writePhotos(x, currUser);
 				}
 			}
@@ -390,6 +383,13 @@ public class OpenAlbumController extends NonAdminController implements Serializa
 	        //path of the file selected is stored
 	        String photoPath = (file.getPath());
 	        Photo newPhoto = new Photo("", new ArrayList<>(), photoPath);
+	        //checking for duplicates
+	        for(Photo p: openedAlbum.getPhotos()) {
+	        	if(p.getPhotoPath().equals(photoPath)) {
+	        		setErrorWindow("Error", "Photo already exists in album");
+	        		return;
+	        	}
+	        }
 	        openedAlbum.addPhoto(newPhoto);
 	        currUser.addPhoto(newPhoto);
 	        setPhotos();
