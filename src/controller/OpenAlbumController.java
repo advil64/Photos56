@@ -60,12 +60,19 @@ public class OpenAlbumController extends NonAdminController implements Serializa
 	 * The text field for user inputted tag type
 	 */
 	@FXML TextField tagTypeText;
+	/**
+	 * The combo box to specify album to move to 
+	 */
 	@FXML ComboBox<String> moveTypeBox;
+	/**
+	 * The combo box to specify album to copy to
+	 */
 	@FXML ComboBox<String> copyComBox;
 	
 
 	/**
 	 * This method is triggered at the start of the openAlbum page
+	 * @param mainStage - main stage of the photo app
 	 * @throws IOException 
 	 * @throws ClassNotFoundException 
 	 */
@@ -267,7 +274,6 @@ public class OpenAlbumController extends NonAdminController implements Serializa
 		}
 		Photo currPhoto = photoList.getSelectionModel().getSelectedItem();
 		openedAlbum.removePhoto(currPhoto);
-//		currUser.getPhotos().remove(currPhoto);
 		ReadWrite.writeAlbums(currUser.getAlbums(), currUser);
 		ReadWrite.writePhotos(openedAlbum, currUser);
 	}
@@ -282,7 +288,12 @@ public class OpenAlbumController extends NonAdminController implements Serializa
 			return;
 		}
 	}
-
+	
+	/**
+	 * This method moves the photo to an album
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 */
 	@FXML
 	private void movePhoto() throws IOException, ClassNotFoundException {
 		String myAlbumName = moveTypeBox.getValue();

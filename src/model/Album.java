@@ -7,21 +7,33 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 /**
- * Defines an album
+ * Class that defines an album
  * @author Advith Chegu
  * @author Banty Patel
  */
 public class Album implements Serializable{
 
-    //album variables
+    /**
+     * albumName
+     */
     public String albumName;
+    /**
+     * Number of photos for the album
+     */
     public int numPhotos;
+    /**
+     * date range for the album
+     */
     public String dateRange;
+    /**
+     * list of photos in the album
+     */
     public ObservableList<Photo> albumPhotos;
 
     /**
      * Creates a new Album object
      * @param albumName name of the new album
+     * @return Album object
      */
     public Album(String albumName, int numPhotos, String dateRange){
         this.albumName = albumName;
@@ -44,7 +56,11 @@ public class Album implements Serializable{
         this.dateRange = dateRange + " - ";
         this.dateRange = dateRange + albumPhotos.get(albumPhotos.size()-1).getDateTime().toString();
     }
-
+    
+    /**
+     * Removes a photo from the list and set the new date range
+     * @param oldPhoto - photo to be removed
+     */
     public void removePhoto(Photo oldPhoto){
         this.albumPhotos.remove(oldPhoto);
         this.numPhotos--;
@@ -68,18 +84,33 @@ public class Album implements Serializable{
         return this.albumPhotos;
     }
     
+    /**
+     * sets the photos list for the album
+     * @param photos - list of photos
+     */
     public void setPhotos(ObservableList<Photo> photos) {
     	this.albumPhotos = photos;
     }
-
+    
+    /**
+     * method to get the name of the album
+     * @return - albumname
+     */
     public String getAlbumName() {
         return albumName;
     }
-
+    
+    /**
+     * method to set the name of the album
+     * @param albumName - name of album
+     */
     public void setAlbumName(String albumName) {
         this.albumName = albumName;
     }
-
+    
+    /**
+     * To string method used for serializing album data
+     */
     @Override
     public String toString() {
     	return "Album name: " + this.albumName+"\n"+"Num. of Photos: " + numPhotos + "\n" + "Date Range: " + dateRange;

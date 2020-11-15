@@ -36,19 +36,61 @@ import model.Photo;
 
 public class SearchPhotosController extends Photos{
 	
+	/**
+	 * List view of the photos
+	 */
 	@FXML ListView<Photo> photoList;
+	/**
+	 * Image view of the image display
+	 */
 	@FXML ImageView image;
+	/**
+	 * Label of the date for the image
+	 */
 	@FXML Text datetimeLabel;
+	/**
+	 * List view of the tags
+	 */
 	@FXML ListView<String> tagsList;
+	/**
+	 * Textfield to take in date from
+	 */
 	@FXML TextField dateFrom;
+	/**
+	 * Textfield to take in date to
+	 */
 	@FXML TextField dateTo;
+	/**
+	 * Combo box for first tag type
+	 */
 	@FXML ComboBox<String> firstTagType;
+	/**
+	 * Combo box for second tag type
+	 */
 	@FXML ComboBox<String> secondTagType;
+	/**
+	 * Combo box for conjunction type
+	 */
 	@FXML ComboBox<String> tagConjunction;
+	/**
+	 * Text field for the first tag
+	 */
 	@FXML TextField firstTag;
+	/**
+	 * Text field for the second tag
+	 */
 	@FXML TextField secondTag;
+	/**
+	 * Create album button to create a new album
+	 */
 	@FXML Button createAlbum;
+	/**
+	 * Array list of conjunctions
+	 */
 	ArrayList<String> conj = new ArrayList<>();
+	/**
+	 * List of photos for the new album
+	 */
 	ObservableList<Photo> list = FXCollections.observableArrayList();
 	
 	/**
@@ -100,21 +142,23 @@ public class SearchPhotosController extends Photos{
 				return;
 			}
 		}
-		//TODO get the size of the photolist to set the num. of photos value in album
-		//TODO get the date range of the photolist to set the date range in album
+		//get the size of the photolist to set the num. of photos value in album
+		int size = list.size();
 		
 		//create the album
-		Album newAlbum = new Album(albumName, 0, "");
+		Album newAlbum = new Album(albumName, size, "");
 		currUser.getAlbums().add(newAlbum);
-		ReadWrite.writeAlbums(currUser.getAlbums(), currUser);
-
-		//create a directory for the album
+		//create dir for new album and add to albums.dat
 		new File("../data/" + currUser.getUsername() + "/" + albumName).mkdir();
+		ReadWrite.writeAlbums(currUser.getAlbums(), currUser);
 		
-		//TODO add all photos to album
-		
-		//TODO write photos to file
-		
+		//add all photos to album
+		for(Photo p: list) {
+			newAlbum.addPhoto(p);
+		}
+		//write photos to file
+		new File("../data/" + currUser.getUsername() + "/" + albumName + "/photo.dat");
+		ReadWrite.writePhotos(newAlbum, currUser);
 		
 	}
 	/**
@@ -234,6 +278,9 @@ public class SearchPhotosController extends Photos{
 		
 	}
 	
+	/**
+	 * Method to set the list view
+	 */
 	private void setPhotos(){
 		photoList.setItems(list);
 		photoList.setCellFactory(param -> new ListCell<Photo>() {

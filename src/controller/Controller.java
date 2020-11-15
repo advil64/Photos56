@@ -17,8 +17,15 @@ import java.io.*;
  * @author Banty Patel
  */
 public class Controller extends Photos {
-	//@FXML TextField username;
+	/**
+	 * TextField holding the username entered at the login page
+	 */
 	@FXML TextField username;
+	
+	/**
+	 * Start method ran at the beginning of the login controller
+	 * @param mainStage - main stage of the photo app
+	 */
 	public void start(Stage mainStage){
 		
 	}

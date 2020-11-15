@@ -11,8 +11,17 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/**
+ * Class used to read and write to a file
+ */
 public class ReadWrite extends Photos{
-
+	
+	/**
+	 * writes the photo data to a file
+	 * @param myAlbum - album opened
+	 * @param curr - user logged in
+	 * @throws IOException
+	 */
     public static void writePhotos(Album myAlbum, User curr) throws IOException{
         FileOutputStream fos = new FileOutputStream("../data/" + curr.getUsername() + "/" + myAlbum.getAlbumName() + "/photo.dat");
         ObjectOutputStream oos = new ObjectOutputStream(fos);
@@ -20,7 +29,13 @@ public class ReadWrite extends Photos{
             oos.writeObject(x.toString());
         }
     }
-
+    
+    /**
+     * writes the information about all albums for a user to a file
+     * @param myAlbums - list of albums
+     * @param curr - current user
+     * @throws IOException
+     */
     public static void writeAlbums(ObservableList<Album> myAlbums, User curr) throws IOException{
         FileOutputStream fos = new FileOutputStream("../data/" + curr.getUsername() + "/" + "albums.dat");
         ObjectOutputStream oos = new ObjectOutputStream(fos);
@@ -28,7 +43,13 @@ public class ReadWrite extends Photos{
             oos.writeObject(x.toString());
         }
     }
-
+    
+    /**
+     * reads the album file
+     * @param curr - current user
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
     public static void readAlbums(User curr) throws IOException, ClassNotFoundException{
 
         //create the file if it doesn't exist
@@ -64,6 +85,14 @@ public class ReadWrite extends Photos{
         }
     }
 
+    /**
+     * reads the photos file
+     * @param myAlbum - opened album
+     * @param curr - current user
+     * @return - list of photos
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
     public static ObservableList<Photo> readPhotos(Album myAlbum, User curr) throws IOException, ClassNotFoundException {
     	//create the file if it doesn't exist
         File temp = new File("../data/" + curr.getUsername() + "/" + myAlbum.getAlbumName() + "/photo.dat");
@@ -146,6 +175,14 @@ public class ReadWrite extends Photos{
             }
         }
     }
+    
+    /**
+     * read the combo box's file
+     * @param curr - current user
+     * @return - list of items in the combo box
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
     public static ObservableList<String> readCombo(User curr) throws IOException, ClassNotFoundException{
     	//create the file if it doesn't exist
         File temp = new File("../data/" + curr.getUsername() + "/combo.dat");
@@ -180,6 +217,12 @@ public class ReadWrite extends Photos{
         return tagTypes;
         }
     }
+    /**
+     * writes the list of items in the combo box
+     * @param combo - list of items in the combo box
+     * @param curr - current user
+     * @throws IOException
+     */
     public static void writeCombo(ObservableList<String> combo, User curr) throws IOException{
         FileOutputStream fos = new FileOutputStream("../data/" + curr.getUsername() + "/combo.dat");
         ObjectOutputStream oos = new ObjectOutputStream(fos);

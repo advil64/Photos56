@@ -33,29 +33,75 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 
+/**
+ * Main class used to run the program
+ */
 public class Photos extends Application implements Serializable{
 
+	/**
+	 * Global scene of the winod
+	 */
     private Scene scene;
+    /**
+     * Global Anchorpane of the window
+     */
     private AnchorPane root;
+    /**
+     * Controller object that references the login page's controller
+     */
     private Controller controller;
+    /**
+     * Controller object that references the admin page's controller
+     */
     private AdminController adminController;
+    /**
+     * Controller object that references the album page's controller
+     */
     private NonAdminController nonAdminController;
+    /**
+     * Controller object that references the opened album page's controller
+     */
     private OpenAlbumController openAlbumController;
+    /**
+     * Controller object that references the slide show page's controller
+     */
     private SlideShowController slideShowController;
+    /**
+     * Controller object that references the search photo page's controller
+     */
     private SearchPhotosController searchPhotosController;
+    /**
+     * Global window for the application
+     */
     private static Stage window;
+    /**
+     * Global Alert error window used for displaying errors
+     */
     private static Alert errorWindow;
-    
+    /**
+     * String holding the location of the usernames' file
+     */
   	public static final String storeFile= "../data/users.dat";
-    
-    //temporary arraylist of users
+    /**
+     * temporary arraylist of users
+     */
     public static ObservableList<User> userList = FXCollections.observableArrayList();
-    //holds the username entered - to be used in NonAdminController
+    /**
+     * holds the username entered - to be used in NonAdminController
+     */
     public static User currUser;
-    //holds the values in the combobox
+    /**
+     * holds the values in the combobox
+     */
     public static ObservableList<String> combo = FXCollections.observableArrayList();
-
-	@Override
+	
+    
+    @Override
+    /**
+     * Start method that runs at the start of the photos app
+     * @param primaryStage - main stage
+     * @throws Exception
+     */
     public void start(Stage primaryStage) throws Exception{
 		//create data directory if it doesn't exist
 		File dir = new File("../data");
@@ -68,6 +114,10 @@ public class Photos extends Application implements Serializable{
         errorWindow.initOwner(primaryStage);
     }
     
+    /**
+     * Main method
+     * @param args
+     */
     public static void main(String[] args) {
     	userList = FXCollections.observableArrayList();
         launch(args);
@@ -115,6 +165,7 @@ public class Photos extends Application implements Serializable{
     }
     /**
      * Method stores all data when GUI is closed
+     * @throws IOException
      */
     @Override
     public void stop() throws IOException{

@@ -20,9 +20,21 @@ import java.io.Serializable;
  */
 public class AdminController extends Photos implements Serializable{
 	
+	/**
+	 * ListView of usernames
+	 */
 	@FXML ListView<User> username_list;
+	/**
+	 * Textfield user to take in username input
+	 */
 	@FXML TextField username_textfield;
 	
+	/**
+	 * method ran at the start of the admin page
+	 * @param mainStage - stage of the photo app
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 */
 	public void start(Stage mainStage) throws IOException, ClassNotFoundException {
 		username_list.setItems(userList);
 		username_list.getSelectionModel().select(0);

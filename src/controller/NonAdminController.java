@@ -25,15 +25,26 @@ import app.Photos;
  * This class is used to control the non-admin login page
  */
 public class NonAdminController extends Photos implements Serializable{
-
+	
+	/**
+	 * Holds the album entered in the textfield
+	 */
 	@FXML TextField album_textfield;
+	/**
+	 * ListView of the albums
+	 */
 	@FXML ListView<Album> albumlist;
 	/**
 	 * Album that is opened is stored
 	 */
 	public static Album openedAlbum;
 
-	
+	/**
+	 * This method is ran at the beginning of the nonAdminController
+	 * @param mainStage - main stage of photo app
+	 * @throws ClassNotFoundException
+	 * @throws IOException
+	 */
 	public void start(Stage mainStage) throws ClassNotFoundException, IOException {
 		//setting up the combo box
 		File temp = new File("../data/" + currUser.getUsername() + "/combo.dat");
@@ -140,8 +151,8 @@ public class NonAdminController extends Photos implements Serializable{
 	
 	/**
 	 * Method used to delete an album's directory
-	 * @param file
-	 * @return
+	 * @param file - directory
+	 * @return - returns true if directory is deleted
 	 */
 	public static boolean deleteDir(File file) {
 		if(file.isDirectory()) {
@@ -159,6 +170,7 @@ public class NonAdminController extends Photos implements Serializable{
 	/**
 	 * This method is engaged when the user clicks the openAlbum button which sets the scene to the openAlbum page
 	 * @throws Exception 
+	 * @throws ClassNotFoundException
 	 */
 	@FXML
 	private void openAlbum() throws IOException, ClassNotFoundException {
@@ -175,6 +187,7 @@ public class NonAdminController extends Photos implements Serializable{
 	/**
 	 * This method is engaged when the user clicks the search photos button which sets the scene to the searchPhotos page
 	 * @throws IOException 
+	 * @throws ClassNotFoundException
 	 */
 	@FXML
 	private void searchPhotos() throws IOException, ClassNotFoundException{
