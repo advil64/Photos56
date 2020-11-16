@@ -1,10 +1,5 @@
 package controller;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Optional;
-
 import app.Photos;
 import app.ReadWrite;
 import javafx.collections.FXCollections;
@@ -12,21 +7,19 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TextInputDialog;
-import javafx.scene.image.Image;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import model.Album;
 import model.Photo;
+
+import java.io.File;
+import java.io.IOException;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Optional;
+import java.util.Date;
 
 /**
  * This class is used to control the search photos page
@@ -53,13 +46,13 @@ public class SearchPhotosController extends Photos{
 	 */
 	@FXML ListView<String> tagsList;
 	/**
-	 * Textfield to take in date from
+	 * Date picker to take in date from
 	 */
-	@FXML TextField dateFrom;
+	@FXML DatePicker dateFrom;
 	/**
-	 * Textfield to take in date to
+	 * Date picker to take in date to
 	 */
-	@FXML TextField dateTo;
+	@FXML DatePicker dateTo;
 	/**
 	 * Combo box for first tag type
 	 */
@@ -120,7 +113,6 @@ public class SearchPhotosController extends Photos{
 						   try {
 							create(result.get());
 							} catch (ClassNotFoundException | IOException e) {
-								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
 						}
@@ -142,15 +134,12 @@ public class SearchPhotosController extends Photos{
 				return;
 			}
 		}
-		//get the size of the photolist to set the num. of photos value in album
-		int size = list.size();
 		
 		//create the album
-		Album newAlbum = new Album(albumName, size, "");
-		currUser.getAlbums().add(newAlbum);
+		Album newAlbum = new Album(albumName, 0, "");
+		currUser.addAlbum(newAlbum);
 		//create dir for new album and add to albums.dat
 		new File("../data/" + currUser.getUsername() + "/" + albumName).mkdir();
-		ReadWrite.writeAlbums(currUser.getAlbums(), currUser);
 		
 		//add all photos to album
 		for(Photo p: list) {
@@ -159,7 +148,7 @@ public class SearchPhotosController extends Photos{
 		//write photos to file
 		new File("../data/" + currUser.getUsername() + "/" + albumName + "/photo.dat");
 		ReadWrite.writePhotos(newAlbum, currUser);
-		
+		ReadWrite.writeAlbums(currUser.getAlbums(), currUser);
 	}
 	/**
 	 * Method is called when go back button is clicked
@@ -187,8 +176,37 @@ public class SearchPhotosController extends Photos{
 	 * Method is called when the date search button is clicked
 	 */
 	@FXML
-	private void searchDate() {
-		
+	private void searchDate() throws IOException, ClassNotFoundException {
+		//date vars
+		ZoneId defaultZoneId = ZoneId.systemDefault();
+		Date dFrom = Date.from(dateFrom.getValue().atStartOfDay(defaultZoneId).toInstant());
+		Date dTo = Date.from(dateTo.getValue().atStartOfDay(defaultZoneId).toInstant());
+
+		//get all the photos in every album for the user
+		ObservableList<Photo> allPhotos = FXCollections.observableArrayList();
+		for(Album x: currUser.getAlbums()) {
+			for(Photo p: ReadWrite.readPhotos(x, currUser)){
+				if(!allPhotos.contains(p)){
+					allPhotos.add(p);
+				}
+			}
+		}
+
+		//check if boxes have values
+		if(dateFrom.getValue() == null){
+			setErrorWindow("Invalid Date", "You need to choose a date from to start the search!");
+		} else if(dateTo.getValue() == null){
+			setErrorWindow("Invalid Date", "You need to choose a date to to start the search!");
+		} else if(dFrom.after(dTo)){
+			setErrorWindow("Invalid Date", "The date from needs to be before the date to!");
+		} else{
+			for(Photo p: allPhotos){
+				if(p.getDateTime().after(dFrom) && p.getDateTime().before(dTo)){
+					list.add(p);
+				}
+			}
+			setPhotos();
+		}
 	}
 	/**
 	 * Method is called when the tag search button is clicked
@@ -211,7 +229,11 @@ public class SearchPhotosController extends Photos{
 		ObservableList<Photo> allPhotos = FXCollections.observableArrayList();
 		//get all the photos in every album for the user
 		for(Album x: currUser.getAlbums()) {
-			allPhotos.addAll(ReadWrite.readPhotos(x, currUser));
+			for(Photo p: ReadWrite.readPhotos(x, currUser)){
+				if(!allPhotos.contains(p)){
+					allPhotos.add(p);
+				}
+			}
 		}
 		//searching by only 1 tag
 		if(conjunction.equals("ONE")) {

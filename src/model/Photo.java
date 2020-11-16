@@ -3,6 +3,7 @@ package model;
 import javafx.scene.image.Image;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 
 /**
@@ -49,7 +50,7 @@ public class Photo implements Comparable<Photo>{
         //get last modified date time
         File photoFile = new File(photoPath);
         long modified = photoFile.lastModified();
-        this.dateTime = new Date(modified * 1000);
+        this.dateTime = new Date(modified);
     }
     
     /**
@@ -147,11 +148,74 @@ public class Photo implements Comparable<Photo>{
     }
     
     /**
-     * method to compare the dates of a photo
+     * method two photos
      * @return - int used for comparison
      */
     @Override
     public int compareTo(Photo toCompare) {
-        return this.dateTime.compareTo(toCompare.getDateTime());
+
+        //sort tag arrays before comparing
+        ArrayList<String> myTags = new ArrayList<>(this.tags);
+        ArrayList<String> compareTags = new ArrayList<>(toCompare.getTags());
+        Collections.sort(myTags);
+        Collections.sort(compareTags);
+
+        //first compare the date time
+        if (!this.photoPath.equals(toCompare.getPhotoPath())){
+            return this.photoPath.compareTo(toCompare.getPhotoPath());
+        } else if(!this.dateTime.equals(toCompare.getDateTime())){
+            return this.dateTime.compareTo(toCompare.getDateTime());
+        } else if(!this.caption.equals(toCompare.getCaption())){
+            return this.caption.compareTo(toCompare.getCaption());
+        } else if(this.tags.size() != toCompare.getTags().size()){
+            return toCompare.getTags().size() - this.getTags().size();
+        } else{
+            for (int i = 0; i < this.tags.size(); i++){
+                if(!myTags.get(i).equals(compareTags.get(i))){
+                    return myTags.get(i).compareTo(compareTags.get(i));
+                }
+            }
+        }
+        return 0;
+    }
+
+    /**
+     * method to check equality of two photos
+     * @return - bool used for comparison
+     */
+    @Override
+    public boolean equals(Object o) {
+
+        //convert to a photo object
+        if(o == null){
+            return false;
+        } else if(!(o instanceof Photo)){
+            return false;
+        }
+        Photo toCompare = (Photo)o;
+
+        //sort tag arrays before comparing
+        ArrayList<String> myTags = new ArrayList<>(this.tags);
+        ArrayList<String> compareTags = new ArrayList<>(toCompare.getTags());
+        Collections.sort(myTags);
+        Collections.sort(compareTags);
+
+        //first compare the date time
+        if (!this.photoPath.equals(toCompare.getPhotoPath())){
+            return false;
+        } else if(!this.dateTime.equals(toCompare.getDateTime())){
+            return false;
+        } else if(!this.caption.equals(toCompare.getCaption())){
+            return false;
+        } else if(this.tags.size() != toCompare.getTags().size()){
+            return false;
+        } else{
+            for (int i = 0; i < this.tags.size(); i++){
+                if(!myTags.get(i).equals(compareTags.get(i))){
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 }

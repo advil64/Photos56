@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.util.ArrayList;
 
 import controller.AdminController;
 import controller.Controller;
@@ -26,8 +25,6 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
-import model.Album;
-import model.Photo;
 import model.User;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;

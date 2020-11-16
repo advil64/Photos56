@@ -1,8 +1,6 @@
 package controller;
 
 import app.ReadWrite;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListCell;
@@ -14,7 +12,6 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import model.Album;
 import model.Photo;
-import model.User;
 
 import java.io.File;
 import java.io.IOException;

@@ -169,6 +169,10 @@ public class ReadWrite extends Photos{
         		}
                 //getting the location
                 String location = temp1.substring(delimeter2+1);
+                Photo toAdd = new Photo(caption,tags,location);
+        		if(!curr.getPhotos().contains(toAdd)){
+        		    curr.addPhoto(toAdd);
+                }
                 gapp.add(new Photo(caption,tags,location));
             } catch (EOFException e) {
                 return gapp;
