@@ -50,3 +50,4 @@ Thumbs.db
 *.wmv
 
 # Photo data files
+photoData/
