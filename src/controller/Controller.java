@@ -32,8 +32,8 @@ public class Controller extends Photos {
 	
 	/**
 	 * This method is activated when the login button is clicked and sets the scene to the appropriate page
-	 * @throws IOException
-	 * @throws ClassNotFoundException 
+	 * @throws IOException File is not found
+	 * @throws ClassNotFoundException File is not found
 	 */
 	@FXML
 	private void login() throws IOException, ClassNotFoundException {

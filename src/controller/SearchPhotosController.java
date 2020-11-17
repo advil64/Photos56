@@ -88,11 +88,10 @@ public class SearchPhotosController extends Photos{
 	
 	/**
 	 * This method is triggered at the start of the search photos page
-	 * @throws IOException 
-	 * @throws ClassNotFoundException 
+	 * @param mainStage the main stage of the scene
 	 */
-	public void start(Stage mainStage) throws ClassNotFoundException, IOException{
-		ArrayList<String> temp = new ArrayList<String>();
+	public void start(Stage mainStage){
+		ArrayList<String> temp = new ArrayList<>();
 		temp.addAll(combo);
 		temp.remove("New");
 		firstTagType.getItems().setAll(temp);
@@ -112,7 +111,7 @@ public class SearchPhotosController extends Photos{
 						if (result.isPresent()){
 						   try {
 							create(result.get());
-							} catch (ClassNotFoundException | IOException e) {
+							} catch (Exception e) {
 								e.printStackTrace();
 							}
 						}
@@ -123,10 +122,10 @@ public class SearchPhotosController extends Photos{
 	
 	/**
 	 * Method to handle create album button
-	 * @throws IOException 
-	 * @throws ClassNotFoundException 
+	 * @param albumName Name of the album to be created
+	 * @throws IOException File is not found
 	 */
-	private void create(String albumName) throws ClassNotFoundException, IOException {
+	private void create(String albumName) throws IOException {
 		//loop through the albums and check if name already exists
 		for(Album x: currUser.getAlbums()) {
 			if(x.getAlbumName().equalsIgnoreCase(albumName.trim())) {
@@ -152,8 +151,8 @@ public class SearchPhotosController extends Photos{
 	}
 	/**
 	 * Method is called when go back button is clicked
-	 * @throws IOException 
-	 * @throws ClassNotFoundException 
+	 * @throws IOException File is not found
+	 * @throws ClassNotFoundException File is not found
 	 */
 	@FXML
 	private void back() throws IOException, ClassNotFoundException {
@@ -174,6 +173,8 @@ public class SearchPhotosController extends Photos{
 	}
 	/**
 	 * Method is called when the date search button is clicked
+	 * @throws IOException File is not found
+	 * @throws ClassNotFoundException File is not found
 	 */
 	@FXML
 	private void searchDate() throws IOException, ClassNotFoundException {
@@ -213,8 +214,8 @@ public class SearchPhotosController extends Photos{
 	}
 	/**
 	 * Method is called when the tag search button is clicked
-	 * @throws IOException 
-	 * @throws ClassNotFoundException 
+	 * @throws IOException File is not found
+	 * @throws ClassNotFoundException File is not found
 	 */
 	@FXML
 	private void searchTag() throws ClassNotFoundException, IOException {

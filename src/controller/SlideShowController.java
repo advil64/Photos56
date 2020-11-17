@@ -54,8 +54,8 @@ public class SlideShowController extends OpenAlbumController {
 	/**
 	 * This method is triggered when the back button is clicked
 	 * Sets the scene to the previous page
-	 * @throws IOException 
-	 * @throws ClassNotFoundException 
+	 * @throws IOException File is not found
+	 * @throws ClassNotFoundException File is not found
 	 */
 	@FXML
 	private void goBack() throws IOException, ClassNotFoundException {

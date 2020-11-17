@@ -74,8 +74,8 @@ public class OpenAlbumController extends NonAdminController implements Serializa
 	/**
 	 * This method is triggered at the start of the openAlbum page
 	 * @param mainStage - main stage of the photo app
-	 * @throws IOException 
-	 * @throws ClassNotFoundException 
+	 * @throws IOException File is not found
+	 * @throws ClassNotFoundException File is not found
 	 */
 	public void start(Stage mainStage) throws ClassNotFoundException, IOException{
 		combo = ReadWrite.readCombo(currUser);
@@ -104,8 +104,8 @@ public class OpenAlbumController extends NonAdminController implements Serializa
 	/**
 	 * This method is triggered when the back button is clicked
 	 * Sets the scene to the previous page
-	 * @throws IOException 
-	 * @throws ClassNotFoundException 
+	 * @throws IOException File is not found
+	 * @throws ClassNotFoundException File is not found
 	 */
 	@FXML
 	private void back() throws IOException, ClassNotFoundException {
@@ -134,7 +134,8 @@ public class OpenAlbumController extends NonAdminController implements Serializa
 	
 	/**
 	 * This method is triggered when the user clicks on the view slideshow button
-	 * @throws IOException 
+	 * @throws IOException File is not found
+	 * @throws ClassNotFoundException File is not found
 	 */
 	@FXML
 	private void slideShow() throws IOException, ClassNotFoundException {
@@ -143,7 +144,8 @@ public class OpenAlbumController extends NonAdminController implements Serializa
 	
 	/**
 	 * This method is triggered when the caption/recaption button is clicked
-	 * @throws IOException 
+	 * @throws IOException File is not found
+	 * @throws ClassNotFoundException File is not found
 	 */
 	@FXML
 	private void captionRecaption() throws IOException, ClassNotFoundException {
@@ -179,7 +181,8 @@ public class OpenAlbumController extends NonAdminController implements Serializa
 	
 	/**
 	 * This method is triggered when the add tag button is clicked
-	 * @throws IOException 
+	 * @throws IOException File is not found
+	 * @throws ClassNotFoundException File is not found
 	 */
 	@FXML
 	private void addTag() throws IOException, ClassNotFoundException {
@@ -291,7 +294,8 @@ public class OpenAlbumController extends NonAdminController implements Serializa
 	
 	/**
 	 * This method is triggered when the delete tag button is clicked
-	 * @throws IOException 
+	 * @throws IOException File is not found
+	 * @throws ClassNotFoundException File is not found
 	 */
 	@FXML
 	private void deleteTag() throws IOException, ClassNotFoundException {
@@ -327,7 +331,7 @@ public class OpenAlbumController extends NonAdminController implements Serializa
 	
 	/**
 	 * This method is triggered when the remove photo button is clicked
-	 * @throws IOException 
+	 * @throws IOException File is not found
 	 */
 	@FXML
 	private void removePhoto() throws IOException {
@@ -354,8 +358,8 @@ public class OpenAlbumController extends NonAdminController implements Serializa
 	
 	/**
 	 * This method moves the photo to an album
-	 * @throws IOException
-	 * @throws ClassNotFoundException
+	 * @throws IOException File is not found
+	 * @throws ClassNotFoundException File is not found
 	 */
 	@FXML
 	private void movePhoto() throws IOException, ClassNotFoundException {
@@ -394,6 +398,8 @@ public class OpenAlbumController extends NonAdminController implements Serializa
 	
 	/**
 	 * This method is triggered when the copy photo button is clicked
+	 * @throws IOException File is not found
+	 * @throws ClassNotFoundException File is not found
 	 */
 	@FXML
 	private void copyPhoto() throws IOException, ClassNotFoundException {
@@ -453,8 +459,8 @@ public class OpenAlbumController extends NonAdminController implements Serializa
 	
 	/**
 	 * This method is triggered when the add photo button is clicked
-	 * @throws IOException 
-	 * @throws ClassNotFoundException 
+	 * @throws IOException File is not found
+	 * @throws ClassNotFoundException File is not found
 	 */
 	@FXML
 	private void addPhoto() throws IOException, ClassNotFoundException {

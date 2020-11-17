@@ -42,8 +42,8 @@ public class NonAdminController extends Photos implements Serializable{
 	/**
 	 * This method is ran at the beginning of the nonAdminController
 	 * @param mainStage - main stage of photo app
-	 * @throws ClassNotFoundException
-	 * @throws IOException
+	 * @throws ClassNotFoundException File is not found
+	 * @throws IOException File is not found
 	 */
 	public void start(Stage mainStage) throws ClassNotFoundException, IOException {
 		//setting up the combo box
@@ -64,8 +64,7 @@ public class NonAdminController extends Photos implements Serializable{
 	/**
 	 * This method is engaged when the user clicks the create button
 	 * Adds an album to the list
-	 * @throws IOException 
-	 * @throws ClassNotFoundException 
+	 * @throws IOException File is not found
 	 */
 	@FXML
 	private void create() throws IOException {
@@ -97,7 +96,7 @@ public class NonAdminController extends Photos implements Serializable{
 	/**
 	 * This method is engaged when the user clicks the rename button
 	 * Renames an album to the list
-	 * @throws IOException 
+	 * @throws IOException File is not found
 	 */
 	@FXML
 	private void rename() throws IOException {
@@ -133,7 +132,7 @@ public class NonAdminController extends Photos implements Serializable{
 	/**
 	 * This method is engaged when the user clicks the delete button
 	 * Deletes an album to the list
-	 * @throws IOException 
+	 * @throws IOException File is not found
 	 */
 	@FXML
 	private void delete() throws IOException {
@@ -176,8 +175,8 @@ public class NonAdminController extends Photos implements Serializable{
 	
 	/**
 	 * This method is engaged when the user clicks the openAlbum button which sets the scene to the openAlbum page
-	 * @throws Exception 
-	 * @throws ClassNotFoundException
+	 * @throws ClassNotFoundException File is not found
+	 * @throws IOException File is not found
 	 */
 	@FXML
 	private void openAlbum() throws IOException, ClassNotFoundException {
@@ -193,8 +192,8 @@ public class NonAdminController extends Photos implements Serializable{
 	}
 	/**
 	 * This method is engaged when the user clicks the search photos button which sets the scene to the searchPhotos page
-	 * @throws IOException 
-	 * @throws ClassNotFoundException
+	 * @throws IOException File is not found
+	 * @throws ClassNotFoundException File is not found
 	 */
 	@FXML
 	private void searchPhotos() throws IOException, ClassNotFoundException{
@@ -203,8 +202,8 @@ public class NonAdminController extends Photos implements Serializable{
 	
 	/**
 	 * This method is engaged when the user clicks the logout button which sets the scene back to the login page
-	 * @throws IOException
-	 * @throws ClassNotFoundException 
+	 * @throws IOException File is not found
+	 * @throws ClassNotFoundException File is not found
 	 */
 	@FXML
 	private void logout() throws IOException, ClassNotFoundException {

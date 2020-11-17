@@ -32,8 +32,8 @@ public class AdminController extends Photos implements Serializable{
 	/**
 	 * method ran at the start of the admin page
 	 * @param mainStage - stage of the photo app
-	 * @throws IOException
-	 * @throws ClassNotFoundException
+	 * @throws IOException File is not found
+	 * @throws ClassNotFoundException File is not found
 	 */
 	public void start(Stage mainStage) throws IOException, ClassNotFoundException {
 		username_list.setItems(userList);
@@ -42,8 +42,8 @@ public class AdminController extends Photos implements Serializable{
 	
 	/**
 	 * This method is engaged when the user clicks the logout button which sets the scene back to the login page
-	 * @throws IOException
-	 * @throws ClassNotFoundException 
+	 * @throws IOException File is not found
+	 * @throws ClassNotFoundException File is not found
 	 */
 	@FXML
 	private void logout() throws IOException, ClassNotFoundException {
@@ -53,7 +53,7 @@ public class AdminController extends Photos implements Serializable{
 	/**
 	 * This method is called when the user clicks on the add button
 	 * Adds a user to the list
-	 * @throws IOException
+	 * @throws IOException File is not found
 	 */
 	@FXML
 	private void add() throws IOException{
@@ -90,7 +90,7 @@ public class AdminController extends Photos implements Serializable{
 	/**
 	 * This method is called when the user clicks on the delete button
 	 * Deletes a user to the list
-	 * @throws IOException 
+	 * @throws IOException File is not found
 	 */
 	@FXML
 	private void delete() throws IOException{
@@ -114,8 +114,8 @@ public class AdminController extends Photos implements Serializable{
 	
 	/**
 	 * Method to delete user's files
-	 * @param file
-	 * @return
+	 * @param file File to be deleted
+	 * @return File is not found
 	 */
 	public static boolean deleteDir(File file) {
 		if(file.isDirectory()) {

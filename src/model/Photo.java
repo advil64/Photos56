@@ -38,8 +38,7 @@ public class Photo implements Comparable<Photo>{
      * Creates a new photo object
      * @param caption caption of the photo
      * @param photoPath filepath of the photo on user's computer
-     * @param tags tags of the photo in tagename: tagvalue format
-     * @return Photo object
+     * @param tags tags of the photo in tag name: tag value format
      */
     public Photo(String caption, ArrayList<String> tags, String photoPath){
         this.caption = caption;

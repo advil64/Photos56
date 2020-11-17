@@ -26,7 +26,6 @@ public class User {
     /**
      * Creates a new user object
      * @param username unique name given to each user to store photos
-     * @return - User object
      */
     public User(String username){
         this.username = username;

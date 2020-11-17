@@ -113,7 +113,7 @@ public class Photos extends Application implements Serializable{
     
     /**
      * Main method
-     * @param args
+     * @param args command line arguments
      */
     public static void main(String[] args) {
     	userList = FXCollections.observableArrayList();
@@ -122,7 +122,7 @@ public class Photos extends Application implements Serializable{
     /**
      * This method is used to write to the users.dat file
      * @param myUsers - list of users
-     * @throws IOException
+     * @throws IOException When file is not found
      */
     public static void writeApp(ObservableList<User> myUsers) throws IOException{
     	FileOutputStream fos = new FileOutputStream(storeFile);
@@ -135,8 +135,8 @@ public class Photos extends Application implements Serializable{
      * This method is used to read the users.dat file and populate the 
      * usernames list (obsList)
      * @return - returns the list of usernames
-     * @throws IOException
-     * @throws ClassNotFoundException
+     * @throws IOException File is not found
+     * @throws ClassNotFoundException File is not found
      */
     public static ObservableList<User> readApp() throws IOException, ClassNotFoundException{
     	//create the file if it doesn't exist
@@ -162,7 +162,7 @@ public class Photos extends Application implements Serializable{
     }
     /**
      * Method stores all data when GUI is closed
-     * @throws IOException
+     * @throws IOException File is not found
      */
     @Override
     public void stop() throws IOException{
@@ -188,7 +188,7 @@ public class Photos extends Application implements Serializable{
      * @param title title label
      * @param resource resource to be loaded
      * @throws IOException thrown when resource can't be found
-     * @throws ClassNotFoundException
+     * @throws ClassNotFoundException File is not found
      */
     public void setStage(String title, String resource) throws IOException, ClassNotFoundException {
         FXMLLoader loader = new FXMLLoader();

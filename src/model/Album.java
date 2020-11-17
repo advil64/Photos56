@@ -33,7 +33,8 @@ public class Album implements Serializable{
     /**
      * Creates a new Album object
      * @param albumName name of the new album
-     * @return Album object
+     * @param dateRange range of dates of the album
+     * @param numPhotos number of photos in the album
      */
     public Album(String albumName, int numPhotos, String dateRange){
         this.albumName = albumName;
