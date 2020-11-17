@@ -178,7 +178,7 @@ public class SearchPhotosController extends Photos{
 	@FXML
 	private void searchDate() throws IOException, ClassNotFoundException {
 		//date vars
-		list.clear();
+
 		ZoneId defaultZoneId = ZoneId.systemDefault();
 		Date dFrom = Date.from(dateFrom.getValue().atStartOfDay(defaultZoneId).toInstant());
 		Date dTo = Date.from(dateTo.getValue().atStartOfDay(defaultZoneId).toInstant());
@@ -203,7 +203,9 @@ public class SearchPhotosController extends Photos{
 		} else{
 			for(Photo p: allPhotos){
 				if(p.getDateTime().after(dFrom) && p.getDateTime().before(dTo)){
-					list.add(p);
+					if(!list.contains(p)){
+						list.add(p);
+					}
 				}
 			}
 			setPhotos();
@@ -216,7 +218,6 @@ public class SearchPhotosController extends Photos{
 	 */
 	@FXML
 	private void searchTag() throws ClassNotFoundException, IOException {
-		list.clear();
 		String tagType1 = firstTagType.getSelectionModel().getSelectedItem();
 		String tagType2 = secondTagType.getSelectionModel().getSelectedItem();
 		String conjunction = tagConjunction.getSelectionModel().getSelectedItem();
@@ -251,7 +252,9 @@ public class SearchPhotosController extends Photos{
 				for(String s1: p.getTags()) {
 					if(s1.equalsIgnoreCase(firstTag)) {
 						//display on the list
-						list.add(p);
+						if(!list.contains(p)){
+							list.add(p);
+						}
 						setPhotos();
 					}
 				}
@@ -278,7 +281,9 @@ public class SearchPhotosController extends Photos{
 			for(Photo p: allPhotos) {
 				for(String s1: p.getTags()) {
 					if(s1.equalsIgnoreCase(firstTag) || s1.equalsIgnoreCase(secondTag)) {
-						list.add(p);
+						if(!list.contains(p)){
+							list.add(p);
+						}
 						setPhotos();
 					}
 				}
@@ -299,7 +304,9 @@ public class SearchPhotosController extends Photos{
 					if(s1.equalsIgnoreCase(firstTag)) {
 						for(String s2: p.getTags()) {
 							if(s2.equalsIgnoreCase(secondTag)) {
-								list.add(p);
+								if(!list.contains(p)){
+									list.add(p);
+								}
 								setPhotos();
 							}
 						}
