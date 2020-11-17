@@ -139,14 +139,14 @@ public class SearchPhotosController extends Photos{
 		Album newAlbum = new Album(albumName, 0, "");
 		currUser.addAlbum(newAlbum);
 		//create dir for new album and add to albums.dat
-		new File("../data/" + currUser.getUsername() + "/" + albumName).mkdir();
+		new File("photoData/" + currUser.getUsername() + "/" + albumName).mkdir();
 		
 		//add all photos to album
 		for(Photo p: list) {
 			newAlbum.addPhoto(p);
 		}
 		//write photos to file
-		new File("../data/" + currUser.getUsername() + "/" + albumName + "/photo.dat");
+		new File("photoData/" + currUser.getUsername() + "/" + albumName + "/photo.dat");
 		ReadWrite.writePhotos(newAlbum, currUser);
 		ReadWrite.writeAlbums(currUser.getAlbums(), currUser);
 	}
@@ -282,11 +282,6 @@ public class SearchPhotosController extends Photos{
 						setPhotos();
 					}
 				}
-//				if(p.getTags().contains(firstTag) || p.getTags().contains(secondTag)) {
-//					//display them on the list
-//					list.add(p);
-//					setPhotos();
-//				}
 			}
 		}
 		//searching with AND

@@ -81,9 +81,9 @@ public class AdminController extends Photos implements Serializable{
 		username_list.setItems(userList);
 		writeApp(userList);
 		//create a user folder
-		new File("../data/" + username).mkdir();
+		new File("photoData/" + username).mkdir();
 		//create the combo box date file
-		new File("../data/" + username + "/combo.dat");
+		new File("photoData/" + username + "/combo.dat");
 		
 	}
 	
@@ -106,7 +106,7 @@ public class AdminController extends Photos implements Serializable{
 		username_list.setItems(userList);
 		writeApp(userList);
 		//delete the directory
-		File file = new File("../data/" + username);
+		File file = new File("photoData/" + username);
 		if(file.isDirectory() && file != null) {
 			deleteDir(file);
 		}

@@ -78,7 +78,7 @@ public class Photos extends Application implements Serializable{
     /**
      * String holding the location of the usernames' file
      */
-  	public static final String storeFile= "../data/users.dat";
+  	public static final String storeFile= "photoData/users.dat";
     /**
      * temporary arraylist of users
      */
@@ -101,7 +101,7 @@ public class Photos extends Application implements Serializable{
      */
     public void start(Stage primaryStage) throws Exception{
 		//create data directory if it doesn't exist
-		File dir = new File("../data");
+		File dir = new File("photoData");
 		if(!dir.exists()) {
 			dir.mkdir();
 		}
@@ -140,7 +140,7 @@ public class Photos extends Application implements Serializable{
      */
     public static ObservableList<User> readApp() throws IOException, ClassNotFoundException{
     	//create the file if it doesn't exist
-    	File temp = new File("../data/users.dat");
+    	File temp = new File("photoData/users.dat");
     	temp.createNewFile();
     	
     	ObservableList<User> gapp = FXCollections.observableArrayList();

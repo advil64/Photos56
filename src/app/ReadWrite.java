@@ -23,7 +23,7 @@ public class ReadWrite extends Photos{
 	 * @throws IOException
 	 */
     public static void writePhotos(Album myAlbum, User curr) throws IOException{
-        FileOutputStream fos = new FileOutputStream("../data/" + curr.getUsername() + "/" + myAlbum.getAlbumName() + "/photo.dat");
+        FileOutputStream fos = new FileOutputStream("photoData/" + curr.getUsername() + "/" + myAlbum.getAlbumName() + "/photo.dat");
         ObjectOutputStream oos = new ObjectOutputStream(fos);
         for(Photo x : myAlbum.getPhotos()) {
             oos.writeObject(x.toString());
@@ -37,7 +37,7 @@ public class ReadWrite extends Photos{
      * @throws IOException
      */
     public static void writeAlbums(ObservableList<Album> myAlbums, User curr) throws IOException{
-        FileOutputStream fos = new FileOutputStream("../data/" + curr.getUsername() + "/" + "albums.dat");
+        FileOutputStream fos = new FileOutputStream("photoData/" + curr.getUsername() + "/" + "albums.dat");
         ObjectOutputStream oos = new ObjectOutputStream(fos);
         for(Album x : myAlbums) {
             oos.writeObject(x.toString());
@@ -53,13 +53,13 @@ public class ReadWrite extends Photos{
     public static void readAlbums(User curr) throws IOException, ClassNotFoundException{
 
         //create the file if it doesn't exist
-        File temp = new File("../data/" + curr.getUsername() + "/" + "albums.dat");
+        File temp = new File("photoData/" + curr.getUsername() + "/" + "albums.dat");
         temp.createNewFile();
         ObservableList<Album> newAlbums = FXCollections.observableArrayList();
         ObjectInputStream ois;
 
         try{
-            ois = new ObjectInputStream(new FileInputStream("../data/" + curr.getUsername() + "/" + "albums.dat"));
+            ois = new ObjectInputStream(new FileInputStream("photoData/" + curr.getUsername() + "/" + "albums.dat"));
         } catch(EOFException e) {
             return;
         }
@@ -95,13 +95,13 @@ public class ReadWrite extends Photos{
      */
     public static ObservableList<Photo> readPhotos(Album myAlbum, User curr) throws IOException, ClassNotFoundException {
     	//create the file if it doesn't exist
-        File temp = new File("../data/" + curr.getUsername() + "/" + myAlbum.getAlbumName() + "/photo.dat");
+        File temp = new File("photoData/" + curr.getUsername() + "/" + myAlbum.getAlbumName() + "/photo.dat");
         temp.createNewFile();
 
         ObservableList<Photo> gapp = FXCollections.observableArrayList();
         ObjectInputStream ois;
         try{
-            ois = new ObjectInputStream(new FileInputStream("../data/" + curr.getUsername() + "/" + myAlbum.getAlbumName() + "/photo.dat"));
+            ois = new ObjectInputStream(new FileInputStream("photoData/" + curr.getUsername() + "/" + myAlbum.getAlbumName() + "/photo.dat"));
         } catch(EOFException e) {
             return gapp;
         }
@@ -196,14 +196,14 @@ public class ReadWrite extends Photos{
      */
     public static ObservableList<String> readCombo(User curr) throws IOException, ClassNotFoundException{
     	//create the file if it doesn't exist
-        File temp = new File("../data/" + curr.getUsername() + "/combo.dat");
+        File temp = new File("photoData/" + curr.getUsername() + "/combo.dat");
         if(temp.exists() == false) {
         	temp.createNewFile();
         }
         ObservableList<String> tagTypes = FXCollections.observableArrayList();
         ObjectInputStream ois;
         try{
-            ois = new ObjectInputStream(new FileInputStream("../data/" + curr.getUsername() + "/combo.dat"));
+            ois = new ObjectInputStream(new FileInputStream("photoData/" + curr.getUsername() + "/combo.dat"));
         } catch(EOFException e) {
             return tagTypes;
         }
@@ -235,7 +235,7 @@ public class ReadWrite extends Photos{
      * @throws IOException
      */
     public static void writeCombo(ObservableList<String> combo, User curr) throws IOException{
-        FileOutputStream fos = new FileOutputStream("../data/" + curr.getUsername() + "/combo.dat");
+        FileOutputStream fos = new FileOutputStream("photoData/" + curr.getUsername() + "/combo.dat");
         ObjectOutputStream oos = new ObjectOutputStream(fos);
         oos.writeObject(combo.toString());
     }

@@ -47,7 +47,7 @@ public class NonAdminController extends Photos implements Serializable{
 	 */
 	public void start(Stage mainStage) throws ClassNotFoundException, IOException {
 		//setting up the combo box
-		File temp = new File("../data/" + currUser.getUsername() + "/combo.dat");
+		File temp = new File("photoData/" + currUser.getUsername() + "/combo.dat");
         if(temp.exists() == false) {
         	temp.createNewFile();
         	combo.add("New");
@@ -91,7 +91,7 @@ public class NonAdminController extends Photos implements Serializable{
 		ReadWrite.writeAlbums(currUser.getAlbums(), currUser);
 
 		//create a directory for the album
-		new File("../data/" + currUser.getUsername() + "/" + albumName).mkdir();
+		new File("photoData/" + currUser.getUsername() + "/" + albumName).mkdir();
 	}
 
 	/**
@@ -125,8 +125,8 @@ public class NonAdminController extends Photos implements Serializable{
 		albumlist.refresh();
 
 		//rename the album's directory
-		File newName = new File("../data/" + currUser.getUsername() + "/" + albumName);
-		File file = new File("../data/" + currUser.getUsername() + "/" + oldName);
+		File newName = new File("photoData/" + currUser.getUsername() + "/" + albumName);
+		File file = new File("photoData/" + currUser.getUsername() + "/" + oldName);
 		file.renameTo(newName);
 	}
 	
@@ -150,7 +150,7 @@ public class NonAdminController extends Photos implements Serializable{
 		ReadWrite.writeAlbums(currUser.getAlbums(), currUser);
 
 		//delete the directory
-		File file = new File("../data/" + currUser.getUsername() + "/" + temp.getAlbumName());
+		File file = new File("photoData/" + currUser.getUsername() + "/" + temp.getAlbumName());
 		if(file.isDirectory() && file != null) {
 			deleteDir(file);
 		}
