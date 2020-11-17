@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Banty Patel, Advith Chegu -->
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="440.0" prefWidth="714.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.OpenAlbumController">
+   <children>
+      <ListView fx:id="photoList" layoutX="4.0" layoutY="4.0" onMouseClicked="#displayImage" prefHeight="347.0" prefWidth="264.0" />
+      <Button fx:id="slideShowbttn" layoutX="4.0" layoutY="357.0" mnemonicParsing="false" onMouseClicked="#slideShow" prefHeight="34.0" prefWidth="264.0" text="View SlideShow" />
+      <Button fx:id="backbttn" layoutX="4.0" layoutY="395.0" mnemonicParsing="false" onMouseClicked="#back" prefHeight="34.0" prefWidth="264.0" text="Go Back" />
+      <ImageView fx:id="image" fitHeight="181.0" fitWidth="210.0" layoutX="274.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" />
+      <ListView fx:id="tagsList" layoutX="500.0" layoutY="24.0" prefHeight="134.0" prefWidth="200.0" />
+      <Label fx:id="tlabel" layoutX="500.0" layoutY="227.0" prefHeight="18.0" prefWidth="42.0" text="Tag:" />
+      <TextField fx:id="tagsTextField" layoutX="542.0" layoutY="223.0" />
+      <Button fx:id="addbttn" layoutX="541.0" layoutY="257.0" mnemonicParsing="false" onMouseClicked="#addTag" prefHeight="26.0" prefWidth="50.0" text="Add" />
+      <Button fx:id="deletebttn" layoutX="639.0" layoutY="257.0" mnemonicParsing="false" onMouseClicked="#deleteTag" text="Delete" />
+      <Label layoutX="280.0" layoutY="211.0" text="Date &amp; Time: " />
+      <Text fx:id="datetimeLabel" layoutX="357.0" layoutY="224.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" wrappingWidth="119.7366943359375" />
+      <Label layoutX="280.0" layoutY="261.0" text="Caption: " />
+      <TextField fx:id="captionTextField" layoutX="328.0" layoutY="257.0" prefHeight="26.0" prefWidth="155.0" />
+      <Button fx:id="captionbttn" layoutX="277.0" layoutY="289.0" mnemonicParsing="false" onMouseClicked="#captionRecaption" prefHeight="26.0" prefWidth="209.0" text="Caption/Recaption" />
+      <Button fx:id="removebttn" layoutX="575.0" layoutY="295.0" mnemonicParsing="false" onMouseClicked="#removePhoto" prefHeight="26.0" prefWidth="130.0" text="Remove Photo" />
+      <ComboBox fx:id="moveTypeBox" layoutX="575.0" layoutY="330.0" onAction="#movePhoto" onMouseClicked="#moveCopyPhoto" prefHeight="26.0" prefWidth="130.0" promptText="Move Photo" />
+      <ComboBox fx:id="copyComBox" layoutX="575.0" layoutY="364.0" onAction="#copyPhoto" onMouseClicked="#moveCopyPhoto" prefHeight="26.0" prefWidth="130.0" promptText="Copy Photo" />
+      <Button fx:id="addbttn" layoutX="574.0" layoutY="400.0" mnemonicParsing="false" onMouseClicked="#addPhoto" prefHeight="26.0" prefWidth="130.0" text="Add Photo" />
+      <ComboBox fx:id="tagTypeBox" layoutX="541.0" layoutY="165.0" prefWidth="150.0" promptText="choose" />
+      <Label layoutX="489.0" layoutY="168.0" prefHeight="18.0" prefWidth="64.0" text="Tag Type:" />
+      <Label layoutX="489.0" layoutY="202.0" prefHeight="18.0" prefWidth="64.0" text="Tag Type:" />
+      <TextField fx:id="tagTypeText" layoutX="542.0" layoutY="198.0" />
+      <Label layoutX="588.0" layoutY="5.0" text="Tags" />
+   </children>
+</AnchorPane>

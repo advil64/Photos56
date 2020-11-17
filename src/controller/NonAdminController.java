@@ -79,7 +79,7 @@ public class NonAdminController extends Photos implements Serializable{
 		
 		//create the album and add it to the list for that specific user
 		for (Album x: currUser.getAlbums()){
-			if(x.getAlbumName().equals(albumName)){
+			if(x.getAlbumName().equalsIgnoreCase(albumName)){
 				setErrorWindow("Invalid Album Name", "Album already exists");
 				return;
 			}
@@ -109,6 +109,13 @@ public class NonAdminController extends Photos implements Serializable{
 			return;
 		} else if(albumlist.getSelectionModel().getSelectedIndex() < 0){
 			return;
+		}
+		//checking if renaming is not allowed
+		for (Album x: currUser.getAlbums()){
+			if(x.getAlbumName().equalsIgnoreCase(albumName)){
+				setErrorWindow("Invalid Album Name", "Album already exists");
+				return;
+			}
 		}
 
 		Album curr = albumlist.getSelectionModel().getSelectedItem();

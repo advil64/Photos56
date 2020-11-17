@@ -6,6 +6,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
@@ -17,6 +18,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+
+import javax.imageio.ImageIO;
 
 /**
  * This class is used to control the OpenAlbum page
@@ -179,33 +182,33 @@ public class OpenAlbumController extends NonAdminController implements Serializa
 			return;
 		}
 		if(boxType == null && (textType == null || textType.equals(""))) {
-			setErrorWindow("Error", "Please select an item from the combobox or input your own tag type");
+			setErrorWindow("Error", "Select an item from the combobox or input your own tag type");
 			return;
 		}
 		if(boxType == null && textType != null) {
-			setErrorWindow("Error", "Please select \"New\" from combo box to input cutom tag type");
+			setErrorWindow("Error", "Select \"New\" from combo box to input cutom tag type");
 			return;
 		}
 		if(boxType.equals("New") && (textType == null || textType.equals(""))) {
-			setErrorWindow("Error", "Please enter a tag type in the combo box");
+			setErrorWindow("Error", "Enter a tag type in the combo box");
 			return;
 		}
 		//if the user chooses something from the combobox and for the textfield
 		if(!boxType.equals("New") && (!textType.equals("") && textType != null)) {
-			if(!boxType.equals(textType)) {
-				setErrorWindow("Error", "Please select new from the combo box or empty the tag type texfield");
+			if(!boxType.equalsIgnoreCase(textType)) {
+				setErrorWindow("Error", "Select new from the combo box or empty tag type");
 				return;
 			}
 		}
 		
 		//choosing something from the combobox
-		if(((textType == null || textType.equals("")) && boxType != null) || (boxType.equals(textType))) {
+		if(((textType == null || textType.equals("")) && boxType != null) || (boxType.equalsIgnoreCase(textType))) {
 			String result = boxType + ": " + tag;
 			Photo curr = photoList.getSelectionModel().getSelectedItem();
 			int index = openedAlbum.getPhotos().indexOf(curr);
 			//search for duplicates
 			for(String s: openedAlbum.getPhotos().get(index).getTags()) {
-				if(s.equals(result)) {
+				if(s.equalsIgnoreCase(result)) {
 					setErrorWindow("Error", "Tag already exists");
 					return;
 				}
@@ -216,8 +219,15 @@ public class OpenAlbumController extends NonAdminController implements Serializa
 			return;
 		}
 		
+		//checking if tag is in combo box
+		boolean unique = true;
+		for(String s: combo) {
+			if(s.equalsIgnoreCase(textType)) {
+				unique = false;
+			}
+		}
 		//entering a new tag type
-		if(!combo.contains(textType)) {
+		if(unique == true) {
 			combo.add(textType);
 		}
 		tagTypeBox.getItems().setAll(combo);
@@ -226,7 +236,7 @@ public class OpenAlbumController extends NonAdminController implements Serializa
 		int index = openedAlbum.getPhotos().indexOf(curr);
 		//search for duplicates
 		for(String s: openedAlbum.getPhotos().get(index).getTags()) {
-			if(s.equals(result)) {
+			if(s.equalsIgnoreCase(result)) {
 				setErrorWindow("Error", "Tag already exists");
 				return;
 			}
@@ -281,7 +291,7 @@ public class OpenAlbumController extends NonAdminController implements Serializa
 	@FXML
 	private void moveCopyPhoto() {
 		if(photoList.getSelectionModel().getSelectedIndex() < 0) {
-			setErrorWindow("Error", "Please select a photo before moving to different album");
+			setErrorWindow("Error", "Select a photo before moving to different album");
 			return;
 		}
 	}
@@ -377,9 +387,10 @@ public class OpenAlbumController extends NonAdminController implements Serializa
 	/**
 	 * This method is triggered when the add photo button is clicked
 	 * @throws IOException 
+	 * @throws ClassNotFoundException 
 	 */
 	@FXML
-	private void addPhoto() throws IOException {
+	private void addPhoto() throws IOException, ClassNotFoundException {
 
 		//open dialog for choosing a new photo
 		FileChooser fileChooser = new FileChooser();
@@ -388,6 +399,19 @@ public class OpenAlbumController extends NonAdminController implements Serializa
 
 		//add the new photo to the current user's images
 		if (file != null) {
+			//check if it's an image
+			boolean b = false;
+			try {
+		        b = (ImageIO.read(file) != null);
+		    } catch (IOException e) {
+		        setErrorWindow("Error", "File is not an image");
+		        return;
+		    }
+			if(b==false) {
+				setErrorWindow("Error", "File is not an image");
+		        return;
+			}
+			
 	        //path of the file selected is stored
 	        String photoPath = (file.getPath());
 	        Photo newPhoto = new Photo("", new ArrayList<>(), photoPath);
@@ -397,6 +421,10 @@ public class OpenAlbumController extends NonAdminController implements Serializa
 	        		setErrorWindow("Error", "Photo already exists in album");
 	        		return;
 	        	}
+	        }
+	        ArrayList<Photo> allPhotos = new ArrayList<>();
+	        for(Album a: currUser.getAlbums()) {
+	        	allPhotos.addAll(ReadWrite.readPhotos(a, currUser));
 	        }
 	        openedAlbum.addPhoto(newPhoto);
 	        currUser.addPhoto(newPhoto);

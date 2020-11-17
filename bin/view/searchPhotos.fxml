@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Banty Patel, Advith Chegu -->
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<?import javafx.scene.control.DatePicker?>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="440.0" prefWidth="714.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.SearchPhotosController">
+   <children>
+      <ListView fx:id="photoList" layoutX="6.0" layoutY="6.0" onMouseClicked="#displayImage" prefHeight="285.0" prefWidth="266.0" />
+      <Button fx:id="createAlbum" layoutX="6.0" layoutY="300.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="266.0" text="Create Album">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Button>
+      <Button fx:id="backButton" layoutX="6.0" layoutY="348.0" mnemonicParsing="false" onMouseClicked="#back" prefHeight="35.0" prefWidth="266.0" text="Go Back">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Button>
+      <ImageView fx:id="image" fitHeight="150.0" fitWidth="211.0" layoutX="282.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" />
+      <Label layoutX="278.0" layoutY="172.0" text="Date &amp; Time:" />
+      <Text fx:id="datetimeLabel" layoutX="357.0" layoutY="185.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" wrappingWidth="136.53680419921875" />
+      <ListView fx:id="tagsList" layoutX="500.0" layoutY="23.0" prefHeight="196.0" prefWidth="200.0" />
+      <Label layoutX="328.0" layoutY="256.0" prefHeight="18.0" prefWidth="88.0" text="Search By Date" />
+      <Label layoutX="283.0" layoutY="283.0" text="From:" />
+      <Label layoutX="283.0" layoutY="318.0" prefHeight="18.0" prefWidth="30.0" text="To:" />
+      <DatePicker fx:id="dateFrom" layoutX="317.0" layoutY="279.0" prefHeight="26.0" prefWidth="118.0" />
+      <DatePicker fx:id="dateTo" layoutX="317.0" layoutY="315.0" prefHeight="26.0" prefWidth="118.0" />
+      <Label layoutX="588.0" layoutY="5.0" text="Tags" />
+      <Label layoutX="560.0" layoutY="256.0" text="Search By Tags" />
+      <ComboBox fx:id="firstTagType" layoutX="482.0" layoutY="279.0" prefHeight="26.0" prefWidth="98.0" />
+      <ComboBox fx:id="tagConjunction" layoutX="560.0" layoutY="322.0" prefHeight="26.0" prefWidth="79.0" />
+      <ComboBox fx:id="secondTagType" layoutX="482.0" layoutY="366.0" prefHeight="26.0" prefWidth="98.0" />
+      <TextField fx:id="firstTag" layoutX="588.0" layoutY="279.0" prefHeight="26.0" prefWidth="118.0" />
+      <TextField fx:id="secondTag" layoutX="588.0" layoutY="367.0" prefHeight="26.0" prefWidth="118.0" />
+      <Button layoutX="332.0" layoutY="353.0" mnemonicParsing="false" onMouseClicked="#searchDate" text="Date Search" />
+      <Button layoutX="560.0" layoutY="399.0" mnemonicParsing="false" onMouseClicked="#searchTag" prefHeight="26.0" prefWidth="79.0" text="Tag Search" />
+   </children>
+</AnchorPane>

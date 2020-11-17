@@ -70,7 +70,7 @@ public class AdminController extends Photos implements Serializable{
 		}
 		//no duplicate users
 		for(int i=0; i<userList.size(); i++) {
-			if(userList.get(i).getUsername().equals(username)) {
+			if(userList.get(i).getUsername().equalsIgnoreCase(username)) {
 				setErrorWindow("Invalid Entry", "Username already exists");
 				return;
 			}

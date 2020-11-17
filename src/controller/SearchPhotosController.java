@@ -129,7 +129,7 @@ public class SearchPhotosController extends Photos{
 	private void create(String albumName) throws ClassNotFoundException, IOException {
 		//loop through the albums and check if name already exists
 		for(Album x: currUser.getAlbums()) {
-			if(x.getAlbumName().equals(albumName.trim())) {
+			if(x.getAlbumName().equalsIgnoreCase(albumName.trim())) {
 				setErrorWindow("Error", "Album name already exists");
 				return;
 			}
@@ -246,10 +246,12 @@ public class SearchPhotosController extends Photos{
 				return;
 			}
 			for(Photo p: allPhotos) {
-				if(p.getTags().contains(firstTag)) {
-					//display them on the list
-					list.add(p);
-					setPhotos();
+				for(String s1: p.getTags()) {
+					if(s1.equalsIgnoreCase(firstTag)) {
+						//display on the list
+						list.add(p);
+						setPhotos();
+					}
 				}
 			}
 		}
@@ -272,11 +274,17 @@ public class SearchPhotosController extends Photos{
 				return;
 			}
 			for(Photo p: allPhotos) {
-				if(p.getTags().contains(firstTag) || p.getTags().contains(secondTag)) {
-					//display them on the list
-					list.add(p);
-					setPhotos();
+				for(String s1: p.getTags()) {
+					if(s1.equalsIgnoreCase(firstTag) || s1.equalsIgnoreCase(secondTag)) {
+						list.add(p);
+						setPhotos();
+					}
 				}
+//				if(p.getTags().contains(firstTag) || p.getTags().contains(secondTag)) {
+//					//display them on the list
+//					list.add(p);
+//					setPhotos();
+//				}
 			}
 		}
 		//searching with AND
@@ -290,10 +298,15 @@ public class SearchPhotosController extends Photos{
 				return;
 			}
 			for(Photo p: allPhotos) {
-				if(p.getTags().contains(firstTag) && p.getTags().contains(secondTag)) {
-					//display them on the list
-					list.add(p);
-					setPhotos();
+				for(String s1: p.getTags()) {
+					if(s1.equalsIgnoreCase(firstTag)) {
+						for(String s2: p.getTags()) {
+							if(s2.equalsIgnoreCase(secondTag)) {
+								list.add(p);
+								setPhotos();
+							}
+						}
+					}
 				}
 			}
 		}

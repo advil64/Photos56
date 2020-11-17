@@ -179,6 +179,7 @@ public class Photos extends Application implements Serializable{
         errorWindow.setTitle("Error");
         errorWindow.setHeaderText(header);
         errorWindow.setContentText(body);
+        errorWindow.getDialogPane().setMinSize(100, 100);
         errorWindow.showAndWait();
     }
 

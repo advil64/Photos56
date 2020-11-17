@@ -121,13 +121,20 @@ public class ReadWrite extends Photos{
                 ArrayList<String> tags = new ArrayList<>();
                 String tag = "";
                 int i = 1;
+                boolean boo = false;
         		for(String s: arr) {
         			//to avoid the null pointer exception in next if statement
         			if(s.equals("")) {
         				continue;
         			}
         			//if it's in combo append s to tag
-        			if(combo.contains(s.substring(0, s.length()-1))) {
+        			for(String c: combo) {
+        				if(c.equalsIgnoreCase(s.substring(0, s.length()-1))) {
+        					boo = true;
+        				}
+        			}
+        			if(boo == true) {
+        				boo = false;
         				//check to see if tag is empty (new starting)
         				if(tag.equals("")) {
         					tag = tag + s + " ";
@@ -135,8 +142,8 @@ public class ReadWrite extends Photos{
         				//not empty add tag to list and start tag over
         				else {
         					//check for commas at the end
-        					if(tag.charAt(s.length()-1) == ',') {
-        						tags.add(tag.substring(0,s.length()-1).trim());
+        					if(tag.charAt(tag.length()-1) == ',') {
+        						tags.add(tag.substring(0,tag.length()-1).trim());
         						tag = "";
         						tag = tag + s + " ";
         					}
@@ -201,7 +208,7 @@ public class ReadWrite extends Photos{
             return tagTypes;
         }
         
-      //read the .dat file and populate the observable list (list of albums)
+      //read the .dat file and populate the observable list (list of types)
         while(true) {
             try {
             	String temp1 = (String)ois.readObject();
