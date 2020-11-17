@@ -493,6 +493,22 @@ public class OpenAlbumController extends NonAdminController implements Serializa
 	        for(Album a: currUser.getAlbums()) {
 	        	allPhotos.addAll(ReadWrite.readPhotos(a, currUser));
 	        }
+	        //go through the albums to see which ones have that picture
+			Photo temp1;
+			for(Album a: currUser.getAlbums()){
+				//load in the current images first
+				a.setPhotos(ReadWrite.readPhotos(a, currUser));
+				for(Photo p: a.getPhotos()) {
+					if(p.getPhotoPath().equals(photoPath)) {
+						openedAlbum.addPhoto(p);
+						currUser.addPhoto(p);
+						setPhotos();
+						ReadWrite.writePhotos(openedAlbum, currUser);
+						ReadWrite.writeAlbums(currUser.getAlbums(), currUser);
+						return;
+					}
+				}
+			}
 	        openedAlbum.addPhoto(newPhoto);
 	        currUser.addPhoto(newPhoto);
 	        setPhotos();
