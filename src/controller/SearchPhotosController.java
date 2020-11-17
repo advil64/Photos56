@@ -178,6 +178,7 @@ public class SearchPhotosController extends Photos{
 	@FXML
 	private void searchDate() throws IOException, ClassNotFoundException {
 		//date vars
+		list.clear();
 		ZoneId defaultZoneId = ZoneId.systemDefault();
 		Date dFrom = Date.from(dateFrom.getValue().atStartOfDay(defaultZoneId).toInstant());
 		Date dTo = Date.from(dateTo.getValue().atStartOfDay(defaultZoneId).toInstant());
@@ -215,6 +216,7 @@ public class SearchPhotosController extends Photos{
 	 */
 	@FXML
 	private void searchTag() throws ClassNotFoundException, IOException {
+		list.clear();
 		String tagType1 = firstTagType.getSelectionModel().getSelectedItem();
 		String tagType2 = secondTagType.getSelectionModel().getSelectedItem();
 		String conjunction = tagConjunction.getSelectionModel().getSelectedItem();
@@ -335,5 +337,6 @@ public class SearchPhotosController extends Photos{
 				}
 			}
 		});
+		photoList.refresh();
 	}
 }

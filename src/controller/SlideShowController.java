@@ -42,6 +42,9 @@ public class SlideShowController extends OpenAlbumController {
 	 */
 	public void start(Stage mainStage){
 		pics = openedAlbum.getPhotos();
+		if(pics.size() < 1){
+			setErrorWindow("No Photos", "There are currently no photos in this album to be displayed");
+		}
 		//show the first item in the photo list
 		Image loc = new Image("file:" + pics.get(0).getPhotoPath());
 		img.getLayoutBounds();

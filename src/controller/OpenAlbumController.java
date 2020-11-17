@@ -17,6 +17,7 @@ import model.Photo;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
@@ -145,7 +146,7 @@ public class OpenAlbumController extends NonAdminController implements Serializa
 	 * @throws IOException 
 	 */
 	@FXML
-	private void captionRecaption() throws IOException {
+	private void captionRecaption() throws IOException, ClassNotFoundException {
 		if(photoList.getSelectionModel().getSelectedIndex() < 0) {
 			setErrorWindow("Error", "Please select an item from the list");
 			return;
@@ -158,9 +159,21 @@ public class OpenAlbumController extends NonAdminController implements Serializa
 			setErrorWindow("Invalid Entry", "Please make sure you enter a valid caption");
 			return;
 		}
-		curr.setCaption(cap);
-		ReadWrite.writePhotos(openedAlbum, currUser);
-		ReadWrite.writeAlbums(currUser.getAlbums(), currUser);
+		//go through the albums to see which ones have that picture
+		Photo temp;
+		for(Album a: currUser.getAlbums()){
+			//load in the current images first
+			a.setPhotos(ReadWrite.readPhotos(a, currUser));
+			if(a.getPhotos().contains(curr)){
+				temp = a.getPhotos().get(a.getPhotos().indexOf(curr));
+				temp.setCaption(cap);
+			}
+		}
+		for(Album al: currUser.getAlbums()){
+			ReadWrite.writePhotos(al, currUser);
+			ReadWrite.writeAlbums(currUser.getAlbums(), currUser);
+		}
+		photoList.setItems(openedAlbum.getPhotos());
 		photoList.refresh();
 	}
 	
@@ -169,7 +182,7 @@ public class OpenAlbumController extends NonAdminController implements Serializa
 	 * @throws IOException 
 	 */
 	@FXML
-	private void addTag() throws IOException {
+	private void addTag() throws IOException, ClassNotFoundException {
 		String boxType = tagTypeBox.getSelectionModel().getSelectedItem();
 		String textType = tagTypeText.getText().trim();
 		String tag = tagsTextField.getText().trim();
@@ -213,7 +226,22 @@ public class OpenAlbumController extends NonAdminController implements Serializa
 					return;
 				}
 			}
-			openedAlbum.getPhotos().get(index).addTag(result);
+			//go through the albums to see which ones have that picture
+			Photo temp;
+			for(Album a: currUser.getAlbums()){
+				//load in the current images first
+				a.setPhotos(ReadWrite.readPhotos(a, currUser));
+				if(a.getPhotos().contains(curr)){
+					temp = a.getPhotos().get(a.getPhotos().indexOf(curr));
+					temp.addTag(result);
+				}
+			}
+			for(Album al: currUser.getAlbums()){
+				ReadWrite.writePhotos(al, currUser);
+				ReadWrite.writeAlbums(currUser.getAlbums(), currUser);
+			}
+			photoList.setItems(openedAlbum.getPhotos());
+			photoList.refresh();
 			ReadWrite.writePhotos(openedAlbum, currUser);
 			tagsList.getItems().setAll(openedAlbum.getPhotos().get(index).getTags());
 			return;
@@ -241,8 +269,22 @@ public class OpenAlbumController extends NonAdminController implements Serializa
 				return;
 			}
 		}
-		openedAlbum.getPhotos().get(index).addTag(result);
-		ReadWrite.writePhotos(openedAlbum, currUser);
+		//go through the albums to see which ones have that picture
+		Photo temp;
+		for(Album a: currUser.getAlbums()){
+			//load in the current images first
+			a.setPhotos(ReadWrite.readPhotos(a, currUser));
+			if(a.getPhotos().contains(curr)){
+				temp = a.getPhotos().get(a.getPhotos().indexOf(curr));
+				temp.addTag(result);
+			}
+		}
+		for(Album al: currUser.getAlbums()){
+			ReadWrite.writePhotos(al, currUser);
+			ReadWrite.writeAlbums(currUser.getAlbums(), currUser);
+		}
+		photoList.setItems(openedAlbum.getPhotos());
+		photoList.refresh();
 		ReadWrite.writeCombo(combo, currUser);
 		tagsList.getItems().setAll(openedAlbum.getPhotos().get(index).getTags());
 	}
@@ -252,7 +294,7 @@ public class OpenAlbumController extends NonAdminController implements Serializa
 	 * @throws IOException 
 	 */
 	@FXML
-	private void deleteTag() throws IOException {
+	private void deleteTag() throws IOException, ClassNotFoundException {
 		if(photoList.getSelectionModel().getSelectedIndex() == -1) {
 			setErrorWindow("Error", "Please select an image");
 			return;
@@ -264,8 +306,22 @@ public class OpenAlbumController extends NonAdminController implements Serializa
 		Photo curr = photoList.getSelectionModel().getSelectedItem();
 		int index = openedAlbum.getPhotos().indexOf(curr);
 		String temp = tagsList.getSelectionModel().getSelectedItem();
-		openedAlbum.getPhotos().get(index).removeTag(temp);
-		ReadWrite.writePhotos(openedAlbum, currUser);
+		//go through the albums to see which ones have that picture
+		Photo temp1;
+		for(Album a: currUser.getAlbums()){
+			//load in the current images first
+			a.setPhotos(ReadWrite.readPhotos(a, currUser));
+			if(a.getPhotos().contains(curr)){
+				temp1 = a.getPhotos().get(a.getPhotos().indexOf(curr));
+				temp1.removeTag(temp);
+			}
+		}
+		for(Album al: currUser.getAlbums()){
+			ReadWrite.writePhotos(al, currUser);
+			ReadWrite.writeAlbums(currUser.getAlbums(), currUser);
+		}
+		photoList.setItems(openedAlbum.getPhotos());
+		photoList.refresh();
 		tagsList.getItems().setAll(openedAlbum.getPhotos().get(index).getTags());	
 	}
 	
@@ -317,10 +373,16 @@ public class OpenAlbumController extends NonAdminController implements Serializa
 					//load in the current images first
 					x.setPhotos(ReadWrite.readPhotos(x, currUser));
 
-					//then add the photo in and rewrite
-					x.addPhoto(currPhoto);
-					openedAlbum.removePhoto(currPhoto);
-					ReadWrite.writePhotos(x, currUser);
+					//check if the album has the photo already
+					if(!x.getPhotos().contains(currPhoto)) {
+
+						//then add the photo in and rewrite
+						x.addPhoto(currPhoto);
+						openedAlbum.removePhoto(currPhoto);
+						ReadWrite.writePhotos(x, currUser);
+					} else{
+						setErrorWindow("Duplicate Photo", "The photo trying to be moved already exists in the album");
+					}
 				}
 			}
 			photoList.refresh();
@@ -349,9 +411,14 @@ public class OpenAlbumController extends NonAdminController implements Serializa
 					//load in the current images first
 					x.setPhotos(ReadWrite.readPhotos(x, currUser));
 
-					//then add the photo in and rewrite
-					x.addPhoto(currPhoto);
-					ReadWrite.writePhotos(x, currUser);
+					//check if the album has the photo already
+					if(!x.getPhotos().contains(currPhoto)) {
+						//then add the photo in and rewrite
+						x.addPhoto(currPhoto);
+						ReadWrite.writePhotos(x, currUser);
+					} else{
+						setErrorWindow("Duplicate Photo", "The photo trying to be copied already exists in the album");
+					}
 				}
 			}
 			photoList.refresh();
