@@ -10,6 +10,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 import model.Album;
 import model.Photo;
@@ -20,7 +21,6 @@ import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
-import javax.imageio.ImageIO;
 
 /**
  * This class is used to control the OpenAlbum page
@@ -468,23 +468,15 @@ public class OpenAlbumController extends NonAdminController implements Serializa
 		//open dialog for choosing a new photo
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("File Chooser");
+		fileChooser.getExtensionFilters().add(new ExtensionFilter("Image files", "*.png", "*.jpg", "*.gif", "*.jpeg"));
 		File file = fileChooser.showOpenDialog(null);
-
+		if(file == null) {
+			setErrorWindow("Error", "Photo already exists in album");
+    		return;
+		}
+		
 		//add the new photo to the current user's images
 		if (file != null) {
-			//check if it's an image
-			boolean b = false;
-			try {
-		        b = (ImageIO.read(file) != null);
-		    } catch (IOException e) {
-		        setErrorWindow("Error", "File is not an image");
-		        return;
-		    }
-			if(b==false) {
-				setErrorWindow("Error", "File is not an image");
-		        return;
-			}
-			
 	        //path of the file selected is stored
 	        String photoPath = (file.getPath());
 	        Photo newPhoto = new Photo("", new ArrayList<>(), photoPath);
